@@ -33,4 +33,20 @@ class EmailUtilities(object):
         msg.attach(MIMEText(self.body, 'plain'))
 
         if self.is_sending_with_attachment():
-            filename = None
+            file = open(self.attachment, 'rb')
+            filename = file.split('/')[len(file) - 1]
+
+            part = MIMEBase('application', 'octet-stream')
+            part.set_payload(file.read())
+            encoders.encode_base64(part)
+            part.add_header('Content Disposition', 'attachment; filename= ' + filename)
+
+            msg.attach(part)
+
+        # TODO: since this is a utility class, I'll need to make this more rrrrrrrobust later
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(self.sender, 'hmmmdoIputmypasswordhere?')
+        text = msg.as_string()
+        server.sendmail(self.sender, self.recipient, text)
+        server.quit()
