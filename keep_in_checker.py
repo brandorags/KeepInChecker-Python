@@ -1,10 +1,14 @@
+from command_line_utilities import CommandLineUtilities
 import subprocess
 import time
 
 
 def take_screenshot():
+    date = CommandLineUtilities.convert_output_to_string(subprocess.Popen('date', stdout=subprocess.PIPE))
+    date = '-'.join(date.split(' '))
     subprocess.call('mkdir -p ~/TempFolder/TempFolder/TempScreenshotDirectory', shell=True)
-    subprocess.call('screencapture ~/TempFolder/TempFolder/TempScreenshotDirectory/screenshot.png', shell=True)
+    subprocess.call('screencapture ~/TempFolder/TempFolder/TempScreenshotDirectory/Screenshot-' +
+                    date + '.png', shell=True)
 
 
 def delete_screenshot():
