@@ -1,6 +1,7 @@
-from command_line_utilities import CommandLineUtilities
 import subprocess
 import time
+
+from command_line_utilities import CommandLineUtilities
 
 
 def take_screenshot():
