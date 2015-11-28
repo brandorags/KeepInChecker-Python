@@ -1,19 +1,18 @@
+import datetime
 import smtplib
 import os
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
-from email.mime.base import MIMEBase
-from email import encoders
+from email.mime.image import MIMEImage
 
-class EmailUtilities(object):
-    """
-    A utility class for sending emails.
-    """
 
-    def __init__(self, sender, recipient, subject, body, attachment):
+class Emailer(object):
+
+    def __init__(self, sender, recipient, sender_password, subject, body, attachment):
         self.sender = sender
         self.recipient = recipient
+        self.sender_password = sender_password
         self.subject = subject
         self.body = body
         self.attachment = attachment
@@ -24,7 +23,6 @@ class EmailUtilities(object):
         else:
             return False
 
-
     def send_email(self):
         msg = MIMEMultipart()
         msg['From'] = self.sender
@@ -33,20 +31,22 @@ class EmailUtilities(object):
         msg.attach(MIMEText(self.body, 'plain'))
 
         if self.is_sending_with_attachment():
-            file = open(self.attachment, 'rb')
-            filename = file.split('/')[len(file) - 1]
-
-            part = MIMEBase('application', 'octet-stream')
-            part.set_payload(file.read())
-            encoders.encode_base64(part)
-            part.add_header('Content Disposition', 'attachment; filename= ' + filename)
-
-            msg.attach(part)
+            screenshot_data = open(self.attachment, 'rb').read()
+            screenshot = MIMEImage(screenshot_data, name=os.path.basename(self.attachment))
+            msg.attach(screenshot)
 
         # TODO: since this is a utility class, I'll need to make this more rrrrrrrobust later
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
-        server.login(self.sender, 'hmmmdoIputmypasswordhere?')
+        server.login(self.sender, self.sender_password)
         text = msg.as_string()
         server.sendmail(self.sender, self.recipient, text)
         server.quit()
+
+
+def get_body_text():
+    # date = command_line_utilities.convert_output_to_string(subprocess.Popen('date', stdout=subprocess.PIPE))
+    # date = '-'.join(date.split(' '))
+    date = datetime.datetime.now()
+    body = 'Hello,\n\nYou have received this email with the following screenshot, which was taken at ' + str(date) + '.'
+    return body
