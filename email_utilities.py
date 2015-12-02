@@ -1,10 +1,11 @@
-import datetime
 import smtplib
 import os
 
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
+from datetime import datetime
+from tzlocal import get_localzone
 
 
 class Emailer(object):
@@ -45,8 +46,8 @@ class Emailer(object):
 
 
 def get_body_text():
-    # date = command_line_utilities.convert_output_to_string(subprocess.Popen('date', stdout=subprocess.PIPE))
-    # date = '-'.join(date.split(' '))
-    date = datetime.datetime.now()
-    body = 'Hello,\n\nYou have received this email with the following screenshot, which was taken at ' + str(date) + '.'
+    date = datetime.now()
+    body = 'Hello,\n\nYou have received this email with the following screenshot, ' \
+           'which was taken at {0} {1} time.'.format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
+
     return body
