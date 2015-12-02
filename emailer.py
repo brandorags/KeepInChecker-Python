@@ -43,11 +43,11 @@ class Emailer(object):
         server.sendmail(self.sender, self.recipient, text)
         server.quit()
 
+    @staticmethod
+    def get_body_text():
+        date = datetime.now()
+        body = 'Hello,\n\nYou have received this email with the following screenshot, ' \
+               'which was taken at {0} {1} time. Keep staying accountable!' \
+            .format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
 
-def get_body_text():
-    date = datetime.now()
-    body = 'Hello,\n\nYou have received this email with the following screenshot, ' \
-           'which was taken at {0} {1} time. Keep staying accountable!' \
-        .format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
-
-    return body
+        return body

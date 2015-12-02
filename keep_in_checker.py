@@ -1,8 +1,7 @@
 import subprocess
 import time
-import email_utilities
 
-from email_utilities import Emailer
+from emailer import Emailer
 from sys import argv
 
 
@@ -38,7 +37,7 @@ def main():
     sender_password = argv[3]
     emailer = Emailer(sender, recipient,
                       sender_password, 'KeepInChecker Attachment',
-                      email_utilities.get_body_text(), get_screenshot_file_name())
+                      Emailer.get_body_text(), get_screenshot_file_name())
 
     mute_volume()
     take_screenshot()
