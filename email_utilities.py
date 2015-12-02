@@ -36,7 +36,6 @@ class Emailer(object):
             screenshot = MIMEImage(screenshot_data, name=os.path.basename(self.attachment))
             msg.attach(screenshot)
 
-        # TODO: since this is a utility class, I'll need to make this more rrrrrrrobust later
         server = smtplib.SMTP('smtp.gmail.com', 587)
         server.starttls()
         server.login(self.sender, self.sender_password)
@@ -48,6 +47,7 @@ class Emailer(object):
 def get_body_text():
     date = datetime.now()
     body = 'Hello,\n\nYou have received this email with the following screenshot, ' \
-           'which was taken at {0} {1} time.'.format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
+           'which was taken at {0} {1} time. Keep staying accountable!' \
+        .format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
 
     return body
