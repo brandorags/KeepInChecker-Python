@@ -48,6 +48,6 @@ def main():
 
 
 while True:
-    interval = random.randint(10800, 18000)
+    interval = random.randint(60, 240)
     sleep(interval)
     main()
