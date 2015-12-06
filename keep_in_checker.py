@@ -1,5 +1,6 @@
 import subprocess
 import random
+import command_line_utilities
 
 from emailer import Emailer
 from time import sleep
@@ -32,6 +33,18 @@ def unmute_volume():
     subprocess.call("osascript -e 'set volume output muted false'", shell=True)
 
 
+def is_browser_open():
+    browsers = ['Firefox', 'Chrome', 'Safari', 'Opera']
+    for browser in browsers:
+        process = subprocess.Popen('ps -ax | grep ' + browser, stdout=subprocess.PIPE, shell=True)
+        process_output = command_line_utilities.convert_output_to_string(process)
+        for output in process_output:
+            if 'app/Contents/MacOS'.lower() in output.lower():
+                return True
+
+    return False
+
+
 def main():
     sender = argv[1]
     recipient = argv[2]
@@ -47,7 +60,8 @@ def main():
     delete_screenshot()
 
 
-while True:
-    interval = random.randint(60, 240)
-    sleep(interval)
-    main()
+# while True:
+#     interval = random.randint(60, 240)
+#     sleep(interval)
+    if is_browser_open():
+        main()

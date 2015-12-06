@@ -5,4 +5,4 @@ def convert_output_to_string(output_object):
 
     :parameter output_object - a subprocess.Popopen object that contains the command output
     """
-    return output_object.stdout.read().decode('utf-8').split('\n')[0]
+    return output_object.stdout.read().decode('utf-8').split('\n')
