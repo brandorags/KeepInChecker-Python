@@ -1,0 +1,3 @@
+pytz==2015.7
+selenium==2.48.0
+tzlocal==1.2
