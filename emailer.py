@@ -47,7 +47,8 @@ class Emailer(object):
     def get_body_text():
         date = datetime.now()
         body = 'Hello,\n\nYou have received this email with the following screenshot, ' \
-               'which was taken at {0} {1} time. Keep staying accountable!' \
+               'which was taken at {0} {1} time. Keep staying accountable!\n' \
+               'Sincerely,\nKeepInChecker' \
             .format(date.strftime('%m/%d/%Y %H:%M:%S'), get_localzone())
 
         return body
