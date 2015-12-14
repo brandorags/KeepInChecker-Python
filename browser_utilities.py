@@ -1,6 +1,5 @@
 import command_line_utilities
 import subprocess
-import selenium
 
 
 def is_browser_open():
