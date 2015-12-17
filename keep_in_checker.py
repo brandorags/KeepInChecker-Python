@@ -6,7 +6,11 @@ import random
 
 from emailer import Emailer
 from time import sleep
-from sys import argv
+from getpass import getpass
+
+
+def show_welcome_message():
+    print('\n---------- KeepInChecker v1.0 ----------')
 
 
 def take_screenshot():
@@ -32,9 +36,10 @@ def record_internet_traffic():
 
 
 def main():
-    sender = argv[1]
-    recipient = argv[2]
-    sender_password = argv[3]
+    show_welcome_message()
+    sender = input('Your Email Address: ')
+    sender_password = getpass('Your Password: ')
+    recipient = input('Your Accountability Partner\'s Email Address: ')
     emailer = Emailer(sender, recipient,
                       sender_password, 'KeepInChecker Attachment',
                       Emailer.get_body_text(), constants.screenshot_file_name)
@@ -46,9 +51,12 @@ def main():
     delete_screenshot()
 
 
-# while True:
-#     interval = random.randint(60, 240)
-#     sleep(interval)
-if browser_utilities.is_browser_open():
-    record_internet_traffic()
-    # main()
+try:
+    # while True:
+    #     interval = random.randint(60, 240)
+    #     sleep(interval)
+    if browser_utilities.is_browser_open():
+        # record_internet_traffic()
+        main()
+except:
+    raise
