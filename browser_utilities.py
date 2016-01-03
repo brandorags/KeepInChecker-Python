@@ -12,7 +12,3 @@ def is_browser_open():
                 return True
 
     return False
-
-
-def get_current_url():
-    pass
