@@ -1,3 +1,4 @@
+gns3-netifaces==0.10.4.1
 pytz==2015.7
-selenium==2.48.0
+scapy-python3==0.18
 tzlocal==1.2
