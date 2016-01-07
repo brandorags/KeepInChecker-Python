@@ -1,1 +1,1 @@
-# temporarily empty
+objectionable_words_list = []
