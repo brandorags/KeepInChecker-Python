@@ -1,10 +1,8 @@
 import command_line_utilities
-import subprocess
-import socket
 import constants
 
 from scapy.all import *
-from datetime import datetime
+from datetime import datetime, timedelta
 
 
 def is_browser_open():
@@ -19,46 +17,57 @@ def is_browser_open():
     return False
 
 
-def is_previous_packet_too_close_in_time_to_current_packet(current_packet_arrival_time, packet_arrival_times,
-                                                           packet_arrival_times_index):
+def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
+                                                           current_obj_word_packet_arrival_time,
+                                                           obj_words_found_datetimes):
+    previous_obj_word_packet_arrival_time = obj_words_found_datetimes[obj_word]
+    time_difference = current_obj_word_packet_arrival_time - previous_obj_word_packet_arrival_time
+
+    if timedelta.total_seconds(time_difference) < 10:
+        return True
 
     return False
 
 
 def scan_user_internet_traffic():
-    sniffed_data = sniff(filter="tcp port 80 and host " + socket.gethostbyname(socket.gethostname()),
-                         timeout=30, count=0)
     keywords = ['GET', 'Host', 'Referer']
-    keywords_found_times = {}
+    obj_words_found_datetimes = {}
     output = []
-    is_first_packet = True
 
+    time_at_beginning_of_scan = datetime.now()
+    sniffed_data = sniff(filter="tcp port 80 and host " + socket.gethostbyname(socket.gethostname()),
+                         timeout=60, count=0)
     for packet in sniffed_data:
         packet_arrival_time = datetime.fromtimestamp(packet.time)
-        objectionable_word_found = False
-
-        if not is_first_packet:
-            if is_previous_packet_too_close_in_time_to_current_packet(packet_arrival_time, packet_arrival_times,
-                                                                      packet_arrival_times_index):
-                break
+        obj_word_found = False
 
         for keyword in keywords:
             if keyword in str(packet):
-                for objectionable_word in constants.objectionable_words_list:
-                    if objectionable_word in str(packet):
-                        output.append('The keyword ' + objectionable_word + ' was found at ' + str(packet_arrival_time))
-                        objectionable_word_found = True
+                for obj_word in constants.objectionable_words_list:
+                    if obj_word in str(packet):
+                        if obj_word in obj_words_found_datetimes and \
+                                is_previous_packet_too_close_in_time_to_current_packet(obj_word,
+                                                                                       packet_arrival_time,
+                                                                                       obj_words_found_datetimes):
+                            break
+
+                        obj_word_found = True
+                        obj_words_found_datetimes[obj_word] = packet_arrival_time
+                        output.append('The word ' + obj_word + ' was found at ' + str(packet_arrival_time))
                         break
 
-            if objectionable_word_found:
+            if obj_word_found:
                 break
 
-        if is_first_packet:
-            is_first_packet = False
-
     if not output:
-        first_packet_time = str(datetime.fromtimestamp(sniffed_data[0].time))
-        last_packet_time = str(datetime.fromtimestamp(sniffed_data[len(sniffed_data) - 1].time))
-        output.append('No questionable words were found during ' + first_packet_time + last_packet_time + '.')
+        if sniffed_data:
+            first_packet_time = str(datetime.fromtimestamp(sniffed_data[0].time))
+            last_packet_time = str(datetime.fromtimestamp(sniffed_data[len(sniffed_data) - 1].time))
+            output.append('No questionable words were found from ' + first_packet_time + ' to ' +
+                          last_packet_time + '.')
+        else:
+            output.append('No questionable words were found from ' +
+                          str(time_at_beginning_of_scan.strftime('%Y-%m-%d %H:%M:%S')) +
+                          ' to ' + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + '.')
 
     return output
