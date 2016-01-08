@@ -17,17 +17,20 @@ def record_internet_traffic():
 
 def main():
     show_welcome_message()
-    sender = input('Your Email Address: ')
-    sender_password = getpass('Your Password: ')
-    recipient = input('Your Accountability Partner\'s Email Address: ')
+    # sender = input('Your Email Address: ')
+    # sender_password = getpass('Your Password: ')
+    # recipient = input('Your Accountability Partner\'s Email Address: ')
 
     internet_traffic = record_internet_traffic()
 
-    emailer = Emailer(sender, recipient,
-                      sender_password, 'KeepInChecker Report',
-                      constants.generate_body_text(internet_traffic))
+    for item in internet_traffic:
+        print(item)
 
-    emailer.send_email()
+    # emailer = Emailer(sender, recipient,
+    #                   sender_password, 'KeepInChecker Report',
+    #                   constants.generate_body_text(internet_traffic))
+    #
+    # emailer.send_email()
 
 
 # while True:
