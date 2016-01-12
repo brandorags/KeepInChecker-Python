@@ -17,6 +17,14 @@ def is_browser_open():
     return False
 
 
+def is_packet_from_whitelisted_website(packet):
+    for site in constants.whitelisted_websites:
+        if site in str(packet):
+            return True
+
+    return False
+
+
 def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
                                                            current_obj_word_packet_arrival_time,
                                                            obj_words_found_datetimes):
@@ -36,8 +44,11 @@ def scan_user_internet_traffic():
 
     time_at_beginning_of_scan = datetime.now()
     sniffed_data = sniff(filter="tcp port 80 and host " + socket.gethostbyname(socket.gethostname()),
-                         timeout=60, count=0)
+                         timeout=10, count=0)
     for packet in sniffed_data:
+        if is_packet_from_whitelisted_website(packet):
+            continue
+
         packet_arrival_time = datetime.fromtimestamp(packet.time)
         obj_word_found = False
 

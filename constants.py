@@ -1,5 +1,7 @@
 objectionable_words_list = ['stackoverflow']
 
+whitelisted_websites = ['reddit.com', 'imgur.com']
+
 
 def generate_body_text(internet_traffic_output):
     email_body = 'Hello,\n\nYou have received this email with the following data,\n'
