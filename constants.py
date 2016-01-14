@@ -1,6 +1,8 @@
-objectionable_words_list = ['stackoverflow']
+objectionable_words_list = ['stackoverflow', 'imgur', 'reddit', 'awesome']
 
-whitelisted_websites = ['reddit.com', 'imgur.com']
+whitelisted_websites = []
+
+packet_keywords = ['GET', 'Host', 'Referer']
 
 
 def generate_body_text(internet_traffic_output):

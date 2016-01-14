@@ -17,6 +17,28 @@ def is_browser_open():
     return False
 
 
+def parse_packet(packet):
+    packet_map = {}
+    str_packet_array = str(bytes(packet)).split('\\r\\n')
+
+    for item in str_packet_array:
+        for keyword in constants.packet_keywords:
+            if keyword in item:
+                if keyword is 'Host' or keyword is 'Referer':
+                    split_item = item.split(keyword + ':')
+
+                    packet_map[keyword] = split_item[1]
+                else:
+                    get_item = item.split(keyword + ' ')
+                    split_item = get_item[1].split(' ')
+
+                    packet_map[keyword] = split_item[0]
+
+    packet_map['Time'] = datetime.fromtimestamp(packet.time)
+
+    return packet_map
+
+
 def is_packet_from_whitelisted_website(packet):
     for site in constants.whitelisted_websites:
         if site in str(packet):
@@ -38,13 +60,14 @@ def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
 
 
 def scan_user_internet_traffic():
-    keywords = ['GET', 'Host', 'Referer']
     obj_words_found_datetimes = {}
+    obj_packets_data = []
     output = []
 
     time_at_beginning_of_scan = datetime.now()
     sniffed_data = sniff(filter="tcp port 80 and host " + socket.gethostbyname(socket.gethostname()),
-                         timeout=10, count=0)
+                         timeout=30, count=0)
+
     for packet in sniffed_data:
         if is_packet_from_whitelisted_website(packet):
             continue
@@ -52,10 +75,10 @@ def scan_user_internet_traffic():
         packet_arrival_time = datetime.fromtimestamp(packet.time)
         obj_word_found = False
 
-        for keyword in keywords:
+        for keyword in constants.packet_keywords:
             if keyword in str(packet):
                 for obj_word in constants.objectionable_words_list:
-                    if obj_word in str(packet):
+                    if obj_word.lower() in str(packet).lower():
                         if obj_word in obj_words_found_datetimes and \
                                 is_previous_packet_too_close_in_time_to_current_packet(obj_word,
                                                                                        packet_arrival_time,
@@ -65,6 +88,8 @@ def scan_user_internet_traffic():
                         obj_word_found = True
                         obj_words_found_datetimes[obj_word] = packet_arrival_time
                         output.append('The word ' + obj_word + ' was found at ' + str(packet_arrival_time))
+
+                        obj_packets_data.append(parse_packet(packet))
                         break
 
             if obj_word_found:
