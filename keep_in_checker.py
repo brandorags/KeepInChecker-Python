@@ -1,8 +1,8 @@
-import browser_utilities
 import constants
 import random
 
-from emailer import Emailer
+from utilities import browser_utilities
+from utilities.emailer import Emailer
 from time import sleep
 from getpass import getpass
 

@@ -1,8 +1,8 @@
-import command_line_utilities
 import constants
 
-from scapy.all import *
 from datetime import datetime, timedelta
+from utilities import command_line_utilities
+from scapy.all import *
 
 
 def is_browser_open():
