@@ -1,7 +1,9 @@
 import constants
+import time
 
 from datetime import datetime, timedelta
 from utilities import command_line_utilities
+from database import queries
 from scapy.all import *
 
 
@@ -37,6 +39,12 @@ def parse_packet(packet):
     packet_map['Time'] = datetime.fromtimestamp(packet.time)
 
     return packet_map
+
+
+def insert_packets_into_database(obj_packets_data):
+    for obj_packet in obj_packets_data:
+        queries.insert_packet(obj_packet['Time'], time.tzname[0], obj_packet['GET'],
+                              obj_packet['Host'], obj_packet['Referer'])
 
 
 def is_packet_from_whitelisted_website(packet):
