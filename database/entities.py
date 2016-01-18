@@ -5,8 +5,8 @@ db = Database('sqlite', 'KeepInChecker.sqlite', create_db=False)
 
 
 class Packets(db.Entity):
-    PacketId = PrimaryKey(int)
-    DateRecieved = Required(str)
+    # PacketId = PrimaryKey(int)
+    DateReceived = Required(str)
     Timezone = Required(str)
     Get = Optional(str)
     Host = Optional(str)

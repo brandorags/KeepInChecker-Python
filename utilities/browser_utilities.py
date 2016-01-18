@@ -1,9 +1,7 @@
-import constants
-import time
-
-from datetime import datetime, timedelta
 from utilities import command_line_utilities
+from datetime import datetime, timedelta
 from database import queries
+from constants import constants
 from scapy.all import *
 
 
@@ -43,8 +41,7 @@ def parse_packet(packet):
 
 def insert_packets_into_database(obj_packets_data):
     for obj_packet in obj_packets_data:
-        queries.insert_packet(obj_packet['Time'], time.tzname[0], obj_packet['GET'],
-                              obj_packet['Host'], obj_packet['Referer'])
+        queries.insert_packet(obj_packet)
 
 
 def is_packet_from_whitelisted_website(packet):
@@ -113,5 +110,8 @@ def scan_user_internet_traffic():
             output.append('No questionable words were found from ' +
                           str(time_at_beginning_of_scan.strftime('%Y-%m-%d %H:%M:%S')) +
                           ' to ' + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + '.')
+
+    if obj_packets_data:
+        insert_packets_into_database(obj_packets_data)
 
     return output
