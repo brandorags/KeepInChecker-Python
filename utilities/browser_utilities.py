@@ -40,8 +40,7 @@ def parse_packet(packet):
 
 
 def insert_packets_into_database(obj_packets_data):
-    for obj_packet in obj_packets_data:
-        queries.insert_packet(obj_packet)
+    queries.insert_packets(obj_packets_data)
 
 
 def is_packet_from_whitelisted_website(packet):
@@ -58,7 +57,7 @@ def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
     previous_obj_word_packet_arrival_time = obj_words_found_datetimes[obj_word]
     time_difference = current_obj_word_packet_arrival_time - previous_obj_word_packet_arrival_time
 
-    if timedelta.total_seconds(time_difference) < 10:
+    if timedelta.total_seconds(time_difference) < 5:
         return True
 
     return False
