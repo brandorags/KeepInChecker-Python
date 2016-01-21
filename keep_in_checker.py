@@ -1,8 +1,7 @@
-import utilities.email_utilities
 import constants
 import random
 
-from utilities import browser_utilities
+from utilities import browser_utilities, email_utilities
 from time import sleep
 from getpass import getpass
 
@@ -17,14 +16,17 @@ def record_internet_traffic():
 
 def main():
     show_welcome_message()
-    # sender = input('Your Email Address: ')
-    # sender_password = getpass('Your Password: ')
-    # recipient = input('Your Accountability Partner\'s Email Address: ')
+    sender = input('Your Email Address: ')
+    sender_password = getpass('Your Password: ')
+    recipient = input('Your Accountability Partner\'s Email Address: ')
 
     internet_traffic = record_internet_traffic()
 
-    for item in internet_traffic:
-        print(item)
+    if internet_traffic:
+        for item in internet_traffic:
+            print(item)
+
+    email_utilities.send_email(sender, sender_password, recipient, 'KeepInChecker')
 
     # emailer = Emailer(sender, recipient,
     #                   sender_password, 'KeepInChecker Report',
@@ -37,5 +39,4 @@ def main():
 #     interval = random.randint(60, 240)
 #     sleep(interval)
 if browser_utilities.is_browser_open():
-    # record_internet_traffic()
     main()
