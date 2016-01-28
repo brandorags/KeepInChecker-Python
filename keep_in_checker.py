@@ -1,9 +1,10 @@
-import constants
 import random
+import threading
 
 from utilities import browser_utilities, email_utilities
-from time import sleep
+from multiprocessing import Queue
 from getpass import getpass
+from time import sleep
 
 
 def show_welcome_message():
@@ -11,7 +12,12 @@ def show_welcome_message():
 
 
 def record_internet_traffic():
-    return browser_utilities.scan_user_internet_traffic()
+    thread_queue = Queue()
+    thread = threading.Thread(target=browser_utilities.scan_user_internet_traffic,
+                              args=(thread_queue,))
+    thread.start()
+
+    return thread_queue.get()
 
 
 def main():

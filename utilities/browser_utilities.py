@@ -63,7 +63,7 @@ def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
     return False
 
 
-def scan_user_internet_traffic():
+def scan_user_internet_traffic(thread_queue):
     obj_words_found_datetimes = {}
     obj_packets_data = []
     output = []
@@ -113,4 +113,5 @@ def scan_user_internet_traffic():
     if obj_packets_data:
         insert_packets_into_database(obj_packets_data)
 
+    thread_queue.put(output)
     return output
