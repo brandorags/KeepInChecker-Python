@@ -12,12 +12,12 @@ def show_welcome_message():
 
 
 def record_internet_traffic():
-    thread_queue = Queue()
+    internet_traffic_queue = Queue()
     thread = threading.Thread(target=browser_utilities.scan_user_internet_traffic,
-                              args=(thread_queue,))
+                              args=(internet_traffic_queue,))
     thread.start()
 
-    return thread_queue.get()
+    return internet_traffic_queue.get()
 
 
 def main():
