@@ -1,8 +1,14 @@
-from utilities import command_line_utilities
+import subprocess
+import pcapy
+
+from utilities import command_line_utilities, packet_utilities
 from datetime import datetime, timedelta
-from database import queries
+from impacket.ImpactDecoder import *
 from constants import constants
-from scapy.all import *
+from database import queries
+
+
+sniffed_data = []
 
 
 def is_browser_open():
@@ -19,22 +25,16 @@ def is_browser_open():
 
 def parse_packet(packet):
     packet_map = {}
-    str_packet_array = str(bytes(packet)).split('\\r\\n')
 
-    for item in str_packet_array:
-        for keyword in constants.packet_keywords:
-            if keyword in item:
-                if keyword is 'Host' or keyword is 'Referer':
-                    split_item = item.split(keyword + ':')
+    for keyword in constants.packet_keywords:
+        if keyword == 'GET':
+            packet_map[keyword] = packet_utilities.parse_get_data(keyword, packet)
+        elif keyword == 'Host':
+            packet_map[keyword] = packet_utilities.parse_host_data(keyword, packet)
+        else:
+            packet_map[keyword] = packet_utilities.parse_referer_data(keyword, packet)
 
-                    packet_map[keyword] = split_item[1]
-                else:
-                    get_item = item.split(keyword + ' ')
-                    split_item = get_item[1].split(' ')
-
-                    packet_map[keyword] = split_item[0]
-
-    packet_map['Time'] = datetime.fromtimestamp(packet.time)
+    packet_map['Time'] = datetime.strftime(datetime.now(), '%d-%m-%Y %H:%M:%S')
 
     return packet_map
 
@@ -63,20 +63,32 @@ def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
     return False
 
 
+def store_packets(pkt_header, data):
+    packet = EthDecoder().decode(data)
+    packet_arrival_time = pkt_header.getts()
+    sniffed_data.append(packet)
+
+
 def scan_user_internet_traffic(thread_queue):
     obj_words_found_datetimes = {}
     obj_packets_data = []
     output = []
 
-    time_at_beginning_of_scan = datetime.now()
-    sniffed_data = sniff(filter="tcp port 80 and host " + socket.gethostbyname(socket.gethostname()),
-                         timeout=30, count=0)
+    # time_at_beginning_of_scan = datetime.now()
+
+    max_bytes = 1024
+    promiscuous_mode = False
+    read_timeout = 100
+    packet_sniffer = pcapy.open_live('en1', max_bytes, promiscuous_mode, read_timeout)
+
+    number_of_packets_to_capture = 300
+    packet_sniffer.loop(number_of_packets_to_capture, store_packets)
 
     for packet in sniffed_data:
         if is_packet_from_whitelisted_website(packet):
             continue
 
-        packet_arrival_time = datetime.fromtimestamp(packet.time)
+        packet_arrival_time = datetime.now()
         obj_word_found = False
 
         for keyword in constants.packet_keywords:
@@ -93,22 +105,11 @@ def scan_user_internet_traffic(thread_queue):
                         obj_words_found_datetimes[obj_word] = packet_arrival_time
                         output.append('The word ' + obj_word + ' was found at ' + str(packet_arrival_time))
 
-                        obj_packets_data.append(parse_packet(packet))
+                        obj_packets_data.append(parse_packet(str(packet)))
                         break
 
             if obj_word_found:
                 break
-
-    if not output:
-        if sniffed_data:
-            first_packet_time = str(datetime.fromtimestamp(sniffed_data[0].time))
-            last_packet_time = str(datetime.fromtimestamp(sniffed_data[len(sniffed_data) - 1].time))
-            output.append('No questionable words were found from ' + first_packet_time + ' to ' +
-                          last_packet_time + '.')
-        else:
-            output.append('No questionable words were found from ' +
-                          str(time_at_beginning_of_scan.strftime('%Y-%m-%d %H:%M:%S')) +
-                          ' to ' + str(datetime.now().strftime('%Y-%m-%d %H:%M:%S')) + '.')
 
     if obj_packets_data:
         insert_packets_into_database(obj_packets_data)

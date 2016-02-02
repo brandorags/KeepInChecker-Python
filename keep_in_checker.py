@@ -22,10 +22,10 @@ def record_internet_traffic():
 
 def main():
     show_welcome_message()
-    user_name = input('Your name: ')
-    user_email = input('Your Email Address: ')
-    user_password = getpass('Your Password: ')
-    recipient_email = input('Your Accountability Partner\'s Email Address: ')
+    # user_name = raw_input('Your name: ')
+    # user_email = raw_input('Your Email Address: ')
+    # user_password = getpass('Your Password: ')
+    # recipient_email = raw_input('Your Accountability Partner\'s Email Address: ')
 
     internet_traffic = record_internet_traffic()
 
@@ -33,7 +33,7 @@ def main():
         for item in internet_traffic:
             print(item)
 
-    email_utilities.send_email(user_name, user_email, user_password, recipient_email)
+    # email_utilities.send_email(user_name, user_email, user_password, recipient_email)
 
 
 # while True:
