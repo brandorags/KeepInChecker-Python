@@ -1,5 +1,15 @@
+from passlib.hash import pbkdf2_sha512
 from database.entities import *
 from time import tzname
+
+
+@db_session
+def insert_user(user_name, user_email, user_email_password,
+                partner_email, email_frequency):
+    hashed_password = pbkdf2_sha512.encrypt(user_email_password, rounds=40000, salt_size=16)
+
+    Users(UserName=user_name, UserEmail=user_email, UserEmailPassword=hashed_password,
+          PartnerEmail=partner_email, EmailFrequency=email_frequency)
 
 
 @db_session

@@ -1,4 +1,5 @@
 impacket==0.9.14
+passlib==1.6.5
 pcapy==0.10.9
 pony==0.6.2
 PySide==1.2.4
