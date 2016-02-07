@@ -1,7 +1,6 @@
 import sys
 
 from settings_dialog import SettingsDialog
-from PySide.QtCore import *
 from PySide.QtGui import *
 
 
@@ -13,7 +12,7 @@ class SystemTrayGui(object):
         settings_action = menu.addAction('Settings...')
         settings_action.triggered.connect(self.settings)
         quit_action = menu.addAction('Quit KeepInChecker')
-        quit_action.triggered.connect(self.exit)
+        quit_action.triggered.connect(self.quit)
 
         icon = QIcon('Wu1QtZW.jpg')
         self.tray = QSystemTrayIcon()
@@ -29,7 +28,7 @@ class SystemTrayGui(object):
         self.dialog = SettingsDialog()
         self.dialog.show()
 
-    def exit(self):
+    def quit(self):
         sys.exit()
 
 
