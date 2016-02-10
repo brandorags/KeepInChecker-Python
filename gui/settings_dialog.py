@@ -10,6 +10,7 @@
 import sys
 
 from PySide import QtCore, QtGui
+from database import queries
 
 class SettingsDialog(QtGui.QWidget):
     def __init__(self):
@@ -59,7 +60,7 @@ class SettingsDialog(QtGui.QWidget):
         spacerItem2 = QtGui.QSpacerItem(47, 9, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_3.addItem(spacerItem2)
         self.password_textbox = QtGui.QLineEdit(self.horizontalLayoutWidget_3)
-        self.password_textbox.setEchoMode(QtGui.QLineEdit.Normal)
+        self.password_textbox.setEchoMode(QtGui.QLineEdit.Password)
         self.password_textbox.setObjectName('password_textbox')
         self.horizontalLayout_3.addWidget(self.password_textbox)
         self.horizontalLayoutWidget_4 = QtGui.QWidget(settings_dialog)
@@ -99,6 +100,7 @@ class SettingsDialog(QtGui.QWidget):
         self.horizontalLayout_7.setObjectName('horizontalLayout_7')
         self.save_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
         self.save_button.setObjectName('save_button')
+        self.save_button.clicked.connect(self.save_user_settings)
         self.horizontalLayout_7.addWidget(self.save_button)
         self.quit_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
         self.quit_button.setObjectName('quit_button')
@@ -121,7 +123,21 @@ class SettingsDialog(QtGui.QWidget):
         self.quit_button.setText(QtGui.QApplication.translate('settings_dialog', 'Quit', None, QtGui.QApplication.UnicodeUTF8))
 
     def save_user_settings(self):
-        pass
+        self.save_button.setDisabled(True)
+
+        try:
+            user_name = self.name_textbox.text()
+            user_email = self.email_textbox.text()
+            password = self.password_textbox.text()
+            partner_email = self.partner_email_textbox.text()
+            email_frequency = self.email_frequency_combo_box.currentText()
+
+            queries.insert_user(user_name, user_email, password,
+                                partner_email, email_frequency)
+        except:
+            pass
+
+        self.save_button.setDisabled(False)
 
     def quit(self):
         sys.exit()
