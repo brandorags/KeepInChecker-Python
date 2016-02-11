@@ -6,8 +6,8 @@ db = Database('sqlite', 'KeepInChecker.sqlite', create_db=False)
 
 class Users(db.Entity):
     UserId = PrimaryKey(int, auto=True)
-    UserName = Required(str)
     UserEmail = Required(str)
+    UserName = Required(str)
     UserEmailPassword = Required(str)
     PartnerEmail = Required(str)
     EmailFrequency = Required(str)
@@ -18,17 +18,17 @@ class Users(db.Entity):
 
         return self.UserId
 
-    def get_UserName(self):
-        if not self.UserName:
-            return ''
-
-        return self.UserName
-
     def get_UserEmail(self):
         if not self.UserEmail:
             return ''
 
         return self.UserEmail
+
+    def get_UserName(self):
+        if not self.UserName:
+            return ''
+
+        return self.UserName
 
     def get_UserEmailPassword(self):
         if not self.UserEmailPassword:
