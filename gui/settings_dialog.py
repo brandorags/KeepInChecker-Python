@@ -7,6 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import threading
 import sys
 
 from PySide import QtCore, QtGui
@@ -146,8 +147,9 @@ class SettingsDialog(QtGui.QWidget):
             partner_email = self.partner_email_textbox.text()
             email_frequency = self.email_frequency_combo_box.currentText()
 
-            queries.insert_user(user_name, user_email, password,
-                                partner_email, email_frequency)
+            insert_user_thread = threading.Thread(target=queries.insert_user, args=(user_name, user_email, password,
+                                                                                    partner_email, email_frequency))
+            insert_user_thread.start()
         except:
             self.save_button.setDisabled(False)
             raise
