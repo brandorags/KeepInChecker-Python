@@ -125,7 +125,7 @@
     <item>
      <widget class="QLineEdit" name="password_textbox">
       <property name="echoMode">
-       <enum>QLineEdit::Normal</enum>
+       <enum>QLineEdit::Password</enum>
       </property>
      </widget>
     </item>
@@ -135,45 +135,12 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>130</y>
-     <width>231</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_5">
-    <item>
-     <widget class="QLabel" name="email_frequency_label">
-      <property name="text">
-       <string>Send Emails:</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QComboBox" name="email_frequency_combo_box">
-      <item>
-       <property name="text">
-        <string>Daily</string>
-       </property>
-      </item>
-      <item>
-       <property name="text">
-        <string>Weekly</string>
-       </property>
-      </item>
-     </widget>
-    </item>
-   </layout>
-  </widget>
-  <widget class="QWidget" name="horizontalLayoutWidget_5">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
      <y>100</y>
      <width>381</width>
      <height>31</height>
     </rect>
    </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_6">
+   <layout class="QHBoxLayout" name="horizontalLayout_5">
     <item>
      <widget class="QLabel" name="partner_email_label">
       <property name="text">
@@ -218,6 +185,9 @@
    <layout class="QHBoxLayout" name="horizontalLayout_7">
     <item>
      <widget class="QPushButton" name="save_button">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="text">
        <string>Save</string>
       </property>
@@ -225,6 +195,9 @@
     </item>
     <item>
      <widget class="QPushButton" name="quit_button">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
       <property name="text">
        <string>Quit</string>
       </property>
@@ -232,7 +205,68 @@
     </item>
    </layout>
   </widget>
+  <widget class="QWidget" name="horizontalLayoutWidget_5">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>130</y>
+     <width>223</width>
+     <height>29</height>
+    </rect>
+   </property>
+   <layout class="QHBoxLayout" name="horizontalLayout_6">
+    <item>
+     <widget class="QLabel" name="email_frequency_label">
+      <property name="text">
+       <string>Email Frequency:</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="horizontalSpacer_5">
+      <property name="orientation">
+       <enum>Qt::Horizontal</enum>
+      </property>
+      <property name="sizeType">
+       <enum>QSizePolicy::Fixed</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>6</width>
+        <height>20</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+    <item>
+     <widget class="QComboBox" name="email_frequency_combo_box">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <item>
+       <property name="text">
+        <string>Daily</string>
+       </property>
+      </item>
+      <item>
+       <property name="text">
+        <string>Weekly</string>
+       </property>
+      </item>
+     </widget>
+    </item>
+   </layout>
+  </widget>
  </widget>
+ <tabstops>
+  <tabstop>name_textbox</tabstop>
+  <tabstop>email_textbox</tabstop>
+  <tabstop>password_textbox</tabstop>
+  <tabstop>partner_email_textbox</tabstop>
+  <tabstop>email_frequency_combo_box</tabstop>
+  <tabstop>save_button</tabstop>
+  <tabstop>quit_button</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

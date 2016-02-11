@@ -2,7 +2,7 @@
 
 # Form implementation generated from reading ui file 'settings_dialog.ui'
 #
-# Created: Sat Feb  6 23:17:36 2016
+# Created: Wed Feb 10 23:35:29 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
@@ -11,6 +11,7 @@ import sys
 
 from PySide import QtCore, QtGui
 from database import queries
+
 
 class SettingsDialog(QtGui.QWidget):
     def __init__(self):
@@ -64,34 +65,20 @@ class SettingsDialog(QtGui.QWidget):
         self.password_textbox.setObjectName('password_textbox')
         self.horizontalLayout_3.addWidget(self.password_textbox)
         self.horizontalLayoutWidget_4 = QtGui.QWidget(settings_dialog)
-        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(10, 130, 231, 31))
+        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(10, 100, 381, 31))
         self.horizontalLayoutWidget_4.setObjectName('horizontalLayoutWidget_4')
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_5.setObjectName('horizontalLayout_5')
-        self.email_frequency_label = QtGui.QLabel(self.horizontalLayoutWidget_4)
-        self.email_frequency_label.setObjectName('email_frequency_label')
-        self.horizontalLayout_5.addWidget(self.email_frequency_label)
-        self.email_frequency_combo_box = QtGui.QComboBox(self.horizontalLayoutWidget_4)
-        self.email_frequency_combo_box.setObjectName('email_frequency_combo_box')
-        self.email_frequency_combo_box.addItem('')
-        self.email_frequency_combo_box.addItem('')
-        self.horizontalLayout_5.addWidget(self.email_frequency_combo_box)
-        self.horizontalLayoutWidget_5 = QtGui.QWidget(settings_dialog)
-        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 100, 381, 31))
-        self.horizontalLayoutWidget_5.setObjectName('horizontalLayoutWidget_5')
-        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_5)
-        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_6.setObjectName('horizontalLayout_6')
-        self.partner_email_label = QtGui.QLabel(self.horizontalLayoutWidget_5)
+        self.partner_email_label = QtGui.QLabel(self.horizontalLayoutWidget_4)
         self.partner_email_label.setObjectName('partner_email_label')
-        self.horizontalLayout_6.addWidget(self.partner_email_label)
+        self.horizontalLayout_5.addWidget(self.partner_email_label)
         spacerItem3 = QtGui.QSpacerItem(16, 9, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
-        self.horizontalLayout_6.addItem(spacerItem3)
-        self.partner_email_textbox = QtGui.QLineEdit(self.horizontalLayoutWidget_5)
+        self.horizontalLayout_5.addItem(spacerItem3)
+        self.partner_email_textbox = QtGui.QLineEdit(self.horizontalLayoutWidget_4)
         self.partner_email_textbox.setEchoMode(QtGui.QLineEdit.Normal)
         self.partner_email_textbox.setObjectName('partner_email_textbox')
-        self.horizontalLayout_6.addWidget(self.partner_email_textbox)
+        self.horizontalLayout_5.addWidget(self.partner_email_textbox)
         self.horizontalLayoutWidget_6 = QtGui.QWidget(settings_dialog)
         self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(10, 160, 381, 80))
         self.horizontalLayoutWidget_6.setObjectName('horizontalLayoutWidget_6')
@@ -99,28 +86,55 @@ class SettingsDialog(QtGui.QWidget):
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout_7.setObjectName('horizontalLayout_7')
         self.save_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
+        self.save_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.save_button.setObjectName('save_button')
         self.save_button.clicked.connect(self.save_user_settings)
         self.horizontalLayout_7.addWidget(self.save_button)
         self.quit_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
+        self.quit_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.quit_button.setObjectName('quit_button')
         self.quit_button.clicked.connect(self.quit)
         self.horizontalLayout_7.addWidget(self.quit_button)
+        self.horizontalLayoutWidget_5 = QtGui.QWidget(settings_dialog)
+        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 130, 223, 29))
+        self.horizontalLayoutWidget_5.setObjectName('horizontalLayoutWidget_5')
+        self.horizontalLayout_6 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_5)
+        self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_6.setObjectName('horizontalLayout_6')
+        self.email_frequency_label = QtGui.QLabel(self.horizontalLayoutWidget_5)
+        self.email_frequency_label.setObjectName('email_frequency_label')
+        self.horizontalLayout_6.addWidget(self.email_frequency_label)
+        spacerItem4 = QtGui.QSpacerItem(6, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout_6.addItem(spacerItem4)
+        self.email_frequency_combo_box = QtGui.QComboBox(self.horizontalLayoutWidget_5)
+        self.email_frequency_combo_box.setCursor(QtCore.Qt.PointingHandCursor)
+        self.email_frequency_combo_box.setObjectName('email_frequency_combo_box')
+        self.email_frequency_combo_box.addItem('')
+        self.email_frequency_combo_box.addItem('')
+        self.horizontalLayout_6.addWidget(self.email_frequency_combo_box)
 
         self.retranslateUi(settings_dialog)
         QtCore.QMetaObject.connectSlotsByName(settings_dialog)
+        settings_dialog.setTabOrder(self.name_textbox, self.email_textbox)
+        settings_dialog.setTabOrder(self.email_textbox, self.password_textbox)
+        settings_dialog.setTabOrder(self.password_textbox, self.partner_email_textbox)
+        settings_dialog.setTabOrder(self.partner_email_textbox, self.email_frequency_combo_box)
+        settings_dialog.setTabOrder(self.email_frequency_combo_box, self.save_button)
+        settings_dialog.setTabOrder(self.save_button, self.quit_button)
+
+        self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
 
     def retranslateUi(self, settings_dialog):
         settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'Settings', None, QtGui.QApplication.UnicodeUTF8))
         self.name_label.setText(QtGui.QApplication.translate('settings_dialog', 'Name:', None, QtGui.QApplication.UnicodeUTF8))
         self.email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email:', None, QtGui.QApplication.UnicodeUTF8))
         self.password_label.setText(QtGui.QApplication.translate('settings_dialog', 'Password:', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Send Emails:', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_combo_box.setItemText(0, QtGui.QApplication.translate('settings_dialog', 'Daily', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_combo_box.setItemText(1, QtGui.QApplication.translate('settings_dialog', 'Weekly', None, QtGui.QApplication.UnicodeUTF8))
         self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partner\'s Email:', None, QtGui.QApplication.UnicodeUTF8))
         self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None, QtGui.QApplication.UnicodeUTF8))
         self.quit_button.setText(QtGui.QApplication.translate('settings_dialog', 'Quit', None, QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email Frequency:', None, QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_combo_box.setItemText(0, QtGui.QApplication.translate('settings_dialog', 'Daily', None, QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_combo_box.setItemText(1, QtGui.QApplication.translate('settings_dialog', 'Weekly', None, QtGui.QApplication.UnicodeUTF8))
 
     def save_user_settings(self):
         self.save_button.setDisabled(True)
@@ -135,7 +149,8 @@ class SettingsDialog(QtGui.QWidget):
             queries.insert_user(user_name, user_email, password,
                                 partner_email, email_frequency)
         except:
-            pass
+            self.save_button.setDisabled(False)
+            raise
 
         self.save_button.setDisabled(False)
 
