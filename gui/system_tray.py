@@ -20,13 +20,14 @@ class SystemTrayGui(object):
         self.tray.setContextMenu(menu)
         self.tray.show()
 
+        self.settings_dialog = SettingsDialog()
+
     def run(self):
         self.app.exec_()
         sys.exit()
 
     def settings(self):
-        self.dialog = SettingsDialog()
-        self.dialog.show()
+        self.settings_dialog.show()
 
     def quit(self):
         sys.exit()
