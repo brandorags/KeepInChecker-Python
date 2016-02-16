@@ -2,13 +2,12 @@
 
 # Form implementation generated from reading ui file 'settings_dialog.ui'
 #
-# Created: Wed Feb 10 23:35:29 2016
+# Created: Tue Feb 16 00:07:33 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
 import threading
-import sys
 
 from PySide import QtCore, QtGui
 from database import queries
@@ -91,11 +90,11 @@ class SettingsDialog(QtGui.QWidget):
         self.save_button.setObjectName('save_button')
         self.save_button.clicked.connect(self.save_user_settings)
         self.horizontalLayout_7.addWidget(self.save_button)
-        self.quit_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
-        self.quit_button.setCursor(QtCore.Qt.PointingHandCursor)
-        self.quit_button.setObjectName('quit_button')
-        self.quit_button.clicked.connect(self.quit)
-        self.horizontalLayout_7.addWidget(self.quit_button)
+        self.cancel_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
+        self.cancel_button.setCursor(QtCore.Qt.PointingHandCursor)
+        self.cancel_button.setObjectName('cancel_button')
+        self.cancel_button.clicked.connect(self.cancel)
+        self.horizontalLayout_7.addWidget(self.cancel_button)
         self.horizontalLayoutWidget_5 = QtGui.QWidget(settings_dialog)
         self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 130, 223, 29))
         self.horizontalLayoutWidget_5.setObjectName('horizontalLayoutWidget_5')
@@ -121,9 +120,7 @@ class SettingsDialog(QtGui.QWidget):
         settings_dialog.setTabOrder(self.password_textbox, self.partner_email_textbox)
         settings_dialog.setTabOrder(self.partner_email_textbox, self.email_frequency_combo_box)
         settings_dialog.setTabOrder(self.email_frequency_combo_box, self.save_button)
-        settings_dialog.setTabOrder(self.save_button, self.quit_button)
-
-        self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
+        settings_dialog.setTabOrder(self.save_button, self.cancel_button)
 
     def retranslateUi(self, settings_dialog):
         settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'Settings', None, QtGui.QApplication.UnicodeUTF8))
@@ -132,7 +129,7 @@ class SettingsDialog(QtGui.QWidget):
         self.password_label.setText(QtGui.QApplication.translate('settings_dialog', 'Password:', None, QtGui.QApplication.UnicodeUTF8))
         self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partner\'s Email:', None, QtGui.QApplication.UnicodeUTF8))
         self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None, QtGui.QApplication.UnicodeUTF8))
-        self.quit_button.setText(QtGui.QApplication.translate('settings_dialog', 'Quit', None, QtGui.QApplication.UnicodeUTF8))
+        self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel', None, QtGui.QApplication.UnicodeUTF8))
         self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email Frequency:', None, QtGui.QApplication.UnicodeUTF8))
         self.email_frequency_combo_box.setItemText(0, QtGui.QApplication.translate('settings_dialog', 'Daily', None, QtGui.QApplication.UnicodeUTF8))
         self.email_frequency_combo_box.setItemText(1, QtGui.QApplication.translate('settings_dialog', 'Weekly', None, QtGui.QApplication.UnicodeUTF8))
@@ -147,8 +144,8 @@ class SettingsDialog(QtGui.QWidget):
             partner_email = self.partner_email_textbox.text()
             email_frequency = self.email_frequency_combo_box.currentText()
 
-            insert_user_thread = threading.Thread(target=queries.insert_user, args=(user_name, user_email, password,
-                                                                                    partner_email, email_frequency))
+            insert_user_thread = threading.Thread(target=queries.save_user_data, args=(user_name, user_email, password,
+                                                                                       partner_email, email_frequency))
             insert_user_thread.start()
         except:
             self.save_button.setDisabled(False)
@@ -156,5 +153,5 @@ class SettingsDialog(QtGui.QWidget):
 
         self.save_button.setDisabled(False)
 
-    def quit(self):
-        sys.exit()
+    def cancel(self):
+        self.close()

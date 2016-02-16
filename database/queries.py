@@ -4,12 +4,40 @@ from time import tzname
 
 
 @db_session
-def insert_user(user_name, user_email, user_email_password,
-                partner_email, email_frequency):
+def save_user_data(user_name, user_email, user_email_password,
+                   partner_email, email_frequency):
+    users = get_users()
+    if users:
+        # currently, we're only saving one user in the database, so
+        # we'll always want the first instance (i.e., users[0])
+        update_user_data(users[0], user_name, user_email,
+                         user_email_password, partner_email, email_frequency)
+        return
+
     hashed_password = pbkdf2_sha512.encrypt(user_email_password, rounds=40000, salt_size=16)
 
     Users(UserName=user_name, UserEmail=user_email, UserEmailPassword=hashed_password,
           PartnerEmail=partner_email, EmailFrequency=email_frequency)
+
+
+@db_session
+def update_user_data(existing_user, user_name, user_email, user_email_password,
+                     partner_email, email_frequency):
+    if existing_user.UserName != user_name:
+        existing_user.UserName = user_name
+
+    if existing_user.UserEmail != user_email:
+        existing_user.UserEmail = user_email
+
+    if not pbkdf2_sha512.verify(user_email_password, existing_user.UserEmailPassword):
+        hashed_password = pbkdf2_sha512.encrypt(user_email_password, rounds=40000, salt_size=16)
+        existing_user.UserEmailPassword = hashed_password
+
+    if existing_user.PartnerEmail != partner_email:
+        existing_user.PartnerEmail = partner_email
+
+    if existing_user.EmailFrequency != email_frequency:
+        existing_user.EmailFrequency = email_frequency
 
 
 @db_session
@@ -29,4 +57,9 @@ def insert_packets(obj_packets_data):
 
 @db_session
 def get_packets():
-    return select(p for p in Packets)[:]
+    return select(packet for packet in Packets)[:]
+
+
+@db_session
+def get_users():
+    return select(user for user in Users)[:]
