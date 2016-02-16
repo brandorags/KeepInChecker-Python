@@ -194,12 +194,12 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="quit_button">
+     <widget class="QPushButton" name="cancel_button">
       <property name="cursor">
        <cursorShape>PointingHandCursor</cursorShape>
       </property>
       <property name="text">
-       <string>Quit</string>
+       <string>Cancel</string>
       </property>
      </widget>
     </item>
@@ -265,7 +265,7 @@
   <tabstop>partner_email_textbox</tabstop>
   <tabstop>email_frequency_combo_box</tabstop>
   <tabstop>save_button</tabstop>
-  <tabstop>quit_button</tabstop>
+  <tabstop>cancel_button</tabstop>
  </tabstops>
  <resources/>
  <connections/>
