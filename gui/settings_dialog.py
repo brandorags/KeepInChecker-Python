@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 import threading
+import re
 
 from PySide import QtCore, QtGui
 from database import queries
@@ -16,9 +17,11 @@ from database import queries
 class SettingsDialog(QtGui.QWidget):
     def __init__(self):
         QtGui.QWidget.__init__(self)
-        self.setupUi(self)
+        self.setup_ui(self)
 
-    def setupUi(self, settings_dialog):
+        self.email_regex = re.compile('^[\w\.\+\-]+@[\w]+\.[a-z]{2,3}$')
+
+    def setup_ui(self, settings_dialog):
         settings_dialog.setObjectName('settings_dialog')
         settings_dialog.resize(408, 240)
         self.horizontalLayoutWidget = QtGui.QWidget(settings_dialog)
@@ -122,17 +125,29 @@ class SettingsDialog(QtGui.QWidget):
         settings_dialog.setTabOrder(self.email_frequency_combo_box, self.save_button)
         settings_dialog.setTabOrder(self.save_button, self.cancel_button)
 
+        self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
+
     def retranslateUi(self, settings_dialog):
-        settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'Settings', None, QtGui.QApplication.UnicodeUTF8))
-        self.name_label.setText(QtGui.QApplication.translate('settings_dialog', 'Name:', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email:', None, QtGui.QApplication.UnicodeUTF8))
-        self.password_label.setText(QtGui.QApplication.translate('settings_dialog', 'Password:', None, QtGui.QApplication.UnicodeUTF8))
-        self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partner\'s Email:', None, QtGui.QApplication.UnicodeUTF8))
-        self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None, QtGui.QApplication.UnicodeUTF8))
-        self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email Frequency:', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_combo_box.setItemText(0, QtGui.QApplication.translate('settings_dialog', 'Daily', None, QtGui.QApplication.UnicodeUTF8))
-        self.email_frequency_combo_box.setItemText(1, QtGui.QApplication.translate('settings_dialog', 'Weekly', None, QtGui.QApplication.UnicodeUTF8))
+        settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'KeepInChecker Settings',
+                                                                    None, QtGui.QApplication.UnicodeUTF8))
+        self.name_label.setText(QtGui.QApplication.translate('settings_dialog', 'Name:', None,
+                                                             QtGui.QApplication.UnicodeUTF8))
+        self.email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email:', None,
+                                                              QtGui.QApplication.UnicodeUTF8))
+        self.password_label.setText(QtGui.QApplication.translate('settings_dialog', 'Password:', None,
+                                                                 QtGui.QApplication.UnicodeUTF8))
+        self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partner\'s Email:', None,
+                                                                      QtGui.QApplication.UnicodeUTF8))
+        self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None,
+                                                              QtGui.QApplication.UnicodeUTF8))
+        self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel/Close', None,
+                                                                QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email Frequency:', None,
+                                                                        QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_combo_box.setItemText(0, QtGui.QApplication.translate('settings_dialog', 'Daily', None,
+                                                                                   QtGui.QApplication.UnicodeUTF8))
+        self.email_frequency_combo_box.setItemText(1, QtGui.QApplication.translate('settings_dialog', 'Weekly', None,
+                                                                                   QtGui.QApplication.UnicodeUTF8))
 
     def save_user_settings(self):
         self.save_button.setDisabled(True)
@@ -144,14 +159,55 @@ class SettingsDialog(QtGui.QWidget):
             partner_email = self.partner_email_textbox.text()
             email_frequency = self.email_frequency_combo_box.currentText()
 
-            insert_user_thread = threading.Thread(target=queries.save_user_data, args=(user_name, user_email, password,
-                                                                                       partner_email, email_frequency))
-            insert_user_thread.start()
+            if self.are_fields_valid(user_name, user_email, password, partner_email):
+                save_user_thread = threading.Thread(target=queries.save_user_data,
+                                                    args=(user_name, user_email, password,
+                                                          partner_email, email_frequency))
+                save_user_thread.start()
         except:
             self.save_button.setDisabled(False)
             raise
 
         self.save_button.setDisabled(False)
+
+    def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_email_text):
+        valid_fields = True
+
+        validated_email_textbox = self.email_regex.match(user_email_text)
+        validated_partner_email_textbox = self.email_regex.match(partner_email_text)
+        if not validated_email_textbox:
+            self.email_textbox.setStyleSheet(self.get_error_background_color(self))
+            valid_fields = False
+        else:
+            self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        if not validated_partner_email_textbox:
+            self.partner_email_textbox.setStyleSheet(self.get_error_background_color(self))
+            valid_fields = False
+        else:
+            self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        if not user_name_text:
+            self.name_textbox.setStyleSheet(self.get_error_background_color(self))
+            valid_fields = False
+        else:
+            self.name_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        if not password_text:
+            self.password_textbox.setStyleSheet(self.get_error_background_color(self))
+            valid_fields = False
+        else:
+            self.password_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        return valid_fields
+
+    @staticmethod
+    def get_error_background_color(self):
+        return 'background-color: rgb(255, 186, 186)'
+
+    @staticmethod
+    def get_successful_background_color(self):
+        return 'background-color: rgb(255, 255, 255)'
 
     def cancel(self):
         self.close()
