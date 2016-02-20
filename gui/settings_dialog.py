@@ -9,6 +9,9 @@
 
 import threading
 import re
+import sys
+import os.path
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from PySide import QtCore, QtGui
 from database import queries
@@ -164,6 +167,9 @@ class SettingsDialog(QtGui.QWidget):
                                                     args=(user_name, user_email, password,
                                                           partner_email, email_frequency))
                 save_user_thread.start()
+
+                tray = QtGui.QSystemTrayIcon()
+                tray.showMessage('Success', 'Your credentials have been saved')
         except:
             self.save_button.setDisabled(False)
             raise
@@ -185,7 +191,7 @@ class SettingsDialog(QtGui.QWidget):
             self.partner_email_textbox.setStyleSheet(self.get_error_background_color(self))
             valid_fields = False
         else:
-            self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
+            self.partner_email_textbox.setStyleSheet(self.get_successful_background_color(self))
 
         if not user_name_text:
             self.name_textbox.setStyleSheet(self.get_error_background_color(self))
