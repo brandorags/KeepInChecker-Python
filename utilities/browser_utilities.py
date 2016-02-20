@@ -1,4 +1,6 @@
+import netifaces as ni
 import subprocess
+import socket
 import pcapy
 
 from utilities import command_line_utilities, packet_utilities
@@ -21,6 +23,23 @@ def is_browser_open():
                 return True
 
     return False
+
+
+def get_current_network_interface():
+    current_network_interface = None
+    comp_ip = socket.gethostbyname(socket.gethostname())
+    interfaces = ni.interfaces()
+
+    for interface in interfaces:
+        try:
+            interface_ip = ni.ifaddresses(interface)[ni.AF_INET][0]['addr']
+            if str(interface_ip) == str(comp_ip):
+                current_network_interface = interface
+                break
+        except:
+            continue
+
+    return current_network_interface
 
 
 def parse_packet(packet_arrival_time, packet):
@@ -74,10 +93,11 @@ def scan_user_internet_traffic(thread_queue):
     obj_word_found_datetime = {}
     output = []
 
+    interface = get_current_network_interface()
     max_bytes = 1024
     promiscuous_mode = False
     read_timeout = 100
-    packet_sniffer = pcapy.open_live('en1', max_bytes, promiscuous_mode, read_timeout)
+    packet_sniffer = pcapy.open_live(interface, max_bytes, promiscuous_mode, read_timeout)
 
     number_of_packets_to_capture = 1000
     packet_sniffer.loop(number_of_packets_to_capture, store_packets)
