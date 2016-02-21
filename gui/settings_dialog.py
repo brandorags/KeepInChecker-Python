@@ -143,7 +143,7 @@ class SettingsDialog(QtGui.QWidget):
                                                                       QtGui.QApplication.UnicodeUTF8))
         self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None,
                                                               QtGui.QApplication.UnicodeUTF8))
-        self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel/Close', None,
+        self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel', None,
                                                                 QtGui.QApplication.UnicodeUTF8))
         self.email_frequency_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email Frequency:', None,
                                                                         QtGui.QApplication.UnicodeUTF8))

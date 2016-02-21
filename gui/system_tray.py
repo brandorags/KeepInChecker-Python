@@ -14,7 +14,7 @@ class SystemTray(object):
         quit_action = menu.addAction('Quit KeepInChecker')
         quit_action.triggered.connect(self.quit)
 
-        icon = QIcon('Wu1QtZW.jpg')
+        icon = QIcon('./images/font-awesome-10-25186.png')
         self.tray = QSystemTrayIcon()
         self.tray.setIcon(icon)
         self.tray.setContextMenu(menu)
