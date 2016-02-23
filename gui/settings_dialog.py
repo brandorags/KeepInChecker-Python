@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'settings_dialog.ui'
+# Form implementation generated from reading ui file 'ui_files/settings_dialog.ui'
 #
-# Created: Tue Feb 16 00:07:33 2016
-#      by: pyside-uic 0.2.15 running on PySide 1.2.4
+# Created: Mon Feb 22 23:53:47 2016
+#      by: pyside-uic 0.2.15 running on PySide 1.2.2
 #
 # WARNING! All changes made in this file will be lost!
 
@@ -26,7 +26,7 @@ class SettingsDialog(QtGui.QWidget):
 
     def setup_ui(self, settings_dialog):
         settings_dialog.setObjectName('settings_dialog')
-        settings_dialog.resize(408, 240)
+        settings_dialog.resize(408, 279)
         self.horizontalLayoutWidget = QtGui.QWidget(settings_dialog)
         self.horizontalLayoutWidget.setGeometry(QtCore.QRect(10, 10, 381, 31))
         self.horizontalLayoutWidget.setObjectName('horizontalLayoutWidget')
@@ -71,7 +71,7 @@ class SettingsDialog(QtGui.QWidget):
         self.password_textbox.setObjectName('password_textbox')
         self.horizontalLayout_3.addWidget(self.password_textbox)
         self.horizontalLayoutWidget_4 = QtGui.QWidget(settings_dialog)
-        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(10, 100, 381, 31))
+        self.horizontalLayoutWidget_4.setGeometry(QtCore.QRect(10, 100, 381, 91))
         self.horizontalLayoutWidget_4.setObjectName('horizontalLayoutWidget_4')
         self.horizontalLayout_5 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_4)
         self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
@@ -79,14 +79,21 @@ class SettingsDialog(QtGui.QWidget):
         self.partner_email_label = QtGui.QLabel(self.horizontalLayoutWidget_4)
         self.partner_email_label.setObjectName('partner_email_label')
         self.horizontalLayout_5.addWidget(self.partner_email_label)
-        spacerItem3 = QtGui.QSpacerItem(16, 9, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        spacerItem3 = QtGui.QSpacerItem(10, 9, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem3)
-        self.partner_email_textbox = QtGui.QLineEdit(self.horizontalLayoutWidget_4)
-        self.partner_email_textbox.setEchoMode(QtGui.QLineEdit.Normal)
-        self.partner_email_textbox.setObjectName('partner_email_textbox')
-        self.horizontalLayout_5.addWidget(self.partner_email_textbox)
+        self.partner_email_table = QtGui.QTableWidget(self.horizontalLayoutWidget_4)
+        self.partner_email_table.setShowGrid(False)
+        self.partner_email_table.setRowCount(3)
+        self.partner_email_table.setColumnCount(1)
+        self.partner_email_table.setObjectName('partner_email_table')
+        self.partner_email_table.setColumnCount(1)
+        self.partner_email_table.setRowCount(3)
+        item = QtGui.QTableWidgetItem()
+        self.partner_email_table.setHorizontalHeaderItem(0, item)
+        self.partner_email_table.horizontalHeader().setStretchLastSection(True)
+        self.horizontalLayout_5.addWidget(self.partner_email_table)
         self.horizontalLayoutWidget_6 = QtGui.QWidget(settings_dialog)
-        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(10, 160, 381, 80))
+        self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(10, 220, 381, 51))
         self.horizontalLayoutWidget_6.setObjectName('horizontalLayoutWidget_6')
         self.horizontalLayout_7 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_6)
         self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
@@ -102,7 +109,7 @@ class SettingsDialog(QtGui.QWidget):
         self.cancel_button.clicked.connect(self.cancel)
         self.horizontalLayout_7.addWidget(self.cancel_button)
         self.horizontalLayoutWidget_5 = QtGui.QWidget(settings_dialog)
-        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 130, 223, 29))
+        self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 190, 223, 29))
         self.horizontalLayoutWidget_5.setObjectName('horizontalLayoutWidget_5')
         self.horizontalLayout_6 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_5)
         self.horizontalLayout_6.setContentsMargins(0, 0, 0, 0)
@@ -123,24 +130,27 @@ class SettingsDialog(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(settings_dialog)
         settings_dialog.setTabOrder(self.name_textbox, self.email_textbox)
         settings_dialog.setTabOrder(self.email_textbox, self.password_textbox)
-        settings_dialog.setTabOrder(self.password_textbox, self.partner_email_textbox)
-        settings_dialog.setTabOrder(self.partner_email_textbox, self.email_frequency_combo_box)
+        settings_dialog.setTabOrder(self.password_textbox, self.partner_email_table)
+        settings_dialog.setTabOrder(self.partner_email_table, self.email_frequency_combo_box)
         settings_dialog.setTabOrder(self.email_frequency_combo_box, self.save_button)
         settings_dialog.setTabOrder(self.save_button, self.cancel_button)
 
         self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
 
     def retranslateUi(self, settings_dialog):
-        settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'KeepInChecker Settings',
-                                                                    None, QtGui.QApplication.UnicodeUTF8))
+        settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'Settings', None,
+                                                                    QtGui.QApplication.UnicodeUTF8))
         self.name_label.setText(QtGui.QApplication.translate('settings_dialog', 'Name:', None,
                                                              QtGui.QApplication.UnicodeUTF8))
         self.email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Email:', None,
                                                               QtGui.QApplication.UnicodeUTF8))
         self.password_label.setText(QtGui.QApplication.translate('settings_dialog', 'Password:', None,
                                                                  QtGui.QApplication.UnicodeUTF8))
-        self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partner\'s Email:', None,
-                                                                      QtGui.QApplication.UnicodeUTF8))
+        self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partners\' Emails:',
+                                                                      None, QtGui.QApplication.UnicodeUTF8))
+        self.partner_email_table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate('settings_dialog',
+                                                                                      'Email Address(es)', None,
+                                                                                              QtGui.QApplication.UnicodeUTF8))
         self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None,
                                                               QtGui.QApplication.UnicodeUTF8))
         self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel', None,
@@ -216,4 +226,10 @@ class SettingsDialog(QtGui.QWidget):
         return 'background-color: rgb(255, 255, 255)'
 
     def cancel(self):
+        self.name_textbox.setText('')
+        self.email_textbox.setText('')
+        self.password_textbox.setText('')
+
+        self.name_textbox.setFocus()
+
         self.close()
