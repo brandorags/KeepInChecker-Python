@@ -9,7 +9,7 @@ class Users(db.Entity):
     UserEmail = Required(str)
     UserName = Required(str)
     UserEmailPassword = Required(str)
-    PartnerEmail = Required(str)
+    PartnerEmails = Required(str)
     EmailFrequency = Required(str)
 
     def get_UserId(self):
@@ -36,7 +36,7 @@ class Users(db.Entity):
 
         return self.UserEmailPassword
 
-    def get_PartnerEmail(self):
+    def get_PartnerEmails(self):
         if not self.PartnerEmail:
             return ''
 

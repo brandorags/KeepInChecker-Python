@@ -87,7 +87,7 @@ class SettingsDialog(QtGui.QWidget):
         self.partner_email_table.setColumnCount(1)
         self.partner_email_table.setObjectName('partner_email_table')
         self.partner_email_table.setColumnCount(1)
-        self.partner_email_table.setRowCount(3)
+        self.partner_email_table.setRowCount(10)
         item = QtGui.QTableWidgetItem()
         self.partner_email_table.setHorizontalHeaderItem(0, item)
         self.partner_email_table.horizontalHeader().setStretchLastSection(True)
@@ -169,13 +169,15 @@ class SettingsDialog(QtGui.QWidget):
             user_name = self.name_textbox.text()
             user_email = self.email_textbox.text()
             password = self.password_textbox.text()
-            partner_email = self.partner_email_textbox.text()
+            partner_email_table = self.partner_email_table
             email_frequency = self.email_frequency_combo_box.currentText()
 
-            if self.are_fields_valid(user_name, user_email, password, partner_email):
+            if self.are_fields_valid(user_name, user_email, password, partner_email_table):
+                partner_emails = self.partner_emails_to_comma_separated_list(self, partner_email_table)
+
                 save_user_thread = threading.Thread(target=queries.save_user_data,
                                                     args=(user_name, user_email, password,
-                                                          partner_email, email_frequency))
+                                                          partner_emails, email_frequency))
                 save_user_thread.start()
 
                 tray = QtGui.QSystemTrayIcon()
@@ -186,34 +188,44 @@ class SettingsDialog(QtGui.QWidget):
 
         self.save_button.setDisabled(False)
 
-    def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_email_text):
+    def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_email_table):
         valid_fields = True
 
-        validated_email_textbox = self.email_regex.match(user_email_text)
-        validated_partner_email_textbox = self.email_regex.match(partner_email_text)
-        if not validated_email_textbox:
-            self.email_textbox.setStyleSheet(self.get_error_background_color(self))
-            valid_fields = False
-        else:
-            self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
-
-        if not validated_partner_email_textbox:
-            self.partner_email_textbox.setStyleSheet(self.get_error_background_color(self))
-            valid_fields = False
-        else:
-            self.partner_email_textbox.setStyleSheet(self.get_successful_background_color(self))
-
+        # validate user name
         if not user_name_text:
             self.name_textbox.setStyleSheet(self.get_error_background_color(self))
             valid_fields = False
         else:
             self.name_textbox.setStyleSheet(self.get_successful_background_color(self))
 
+        # validate email address
+        validated_email_textbox = self.email_regex.match(user_email_text)
+        if not validated_email_textbox:
+            self.email_textbox.setStyleSheet(self.get_error_background_color(self))
+            valid_fields = False
+        else:
+            self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        # validate password
         if not password_text:
             self.password_textbox.setStyleSheet(self.get_error_background_color(self))
             valid_fields = False
         else:
             self.password_textbox.setStyleSheet(self.get_successful_background_color(self))
+
+        # validate partner emails
+        column_index = 0
+        for row in xrange(partner_email_table.rowCount()):
+            partner_email = partner_email_table.item(row, column_index)
+            if not partner_email:
+                continue
+
+            validated_partner_email_text = self.email_regex.match(str(partner_email.text()))
+            if not validated_partner_email_text:
+                partner_email.setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
+                valid_fields = False
+            else:
+                partner_email.setBackground(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
 
         return valid_fields
 
@@ -224,6 +236,23 @@ class SettingsDialog(QtGui.QWidget):
     @staticmethod
     def get_successful_background_color(self):
         return 'background-color: rgb(255, 255, 255)'
+
+    @staticmethod
+    def partner_emails_to_comma_separated_list(self, partner_emails):
+        partner_emails_as_comma_sep_list = ''
+
+        column_index = 0
+        for row in xrange(partner_emails.rowCount()):
+            partner_email = partner_emails.item(row, column_index)
+            if not partner_email:
+                continue
+
+            if partner_emails_as_comma_sep_list != '':
+                partner_emails_as_comma_sep_list += ', ' + str(partner_email.text())
+            else:
+                partner_emails_as_comma_sep_list = str(partner_email.text())
+
+        return partner_emails_as_comma_sep_list.strip()
 
     def cancel(self):
         self.name_textbox.setText('')
