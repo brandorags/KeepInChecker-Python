@@ -81,17 +81,17 @@ class SettingsDialog(QtGui.QWidget):
         self.horizontalLayout_5.addWidget(self.partner_email_label)
         spacerItem3 = QtGui.QSpacerItem(10, 9, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
         self.horizontalLayout_5.addItem(spacerItem3)
-        self.partner_email_table = QtGui.QTableWidget(self.horizontalLayoutWidget_4)
-        self.partner_email_table.setShowGrid(False)
-        self.partner_email_table.setRowCount(3)
-        self.partner_email_table.setColumnCount(1)
-        self.partner_email_table.setObjectName('partner_email_table')
-        self.partner_email_table.setColumnCount(1)
-        self.partner_email_table.setRowCount(10)
+        self.partner_emails_table = QtGui.QTableWidget(self.horizontalLayoutWidget_4)
+        self.partner_emails_table.setShowGrid(False)
+        self.partner_emails_table.setRowCount(3)
+        self.partner_emails_table.setColumnCount(1)
+        self.partner_emails_table.setObjectName('partner_emails_table')
+        self.partner_emails_table.setColumnCount(1)
+        self.partner_emails_table.setRowCount(10)
         item = QtGui.QTableWidgetItem()
-        self.partner_email_table.setHorizontalHeaderItem(0, item)
-        self.partner_email_table.horizontalHeader().setStretchLastSection(True)
-        self.horizontalLayout_5.addWidget(self.partner_email_table)
+        self.partner_emails_table.setHorizontalHeaderItem(0, item)
+        self.partner_emails_table.horizontalHeader().setStretchLastSection(True)
+        self.horizontalLayout_5.addWidget(self.partner_emails_table)
         self.horizontalLayoutWidget_6 = QtGui.QWidget(settings_dialog)
         self.horizontalLayoutWidget_6.setGeometry(QtCore.QRect(10, 220, 381, 51))
         self.horizontalLayoutWidget_6.setObjectName('horizontalLayoutWidget_6')
@@ -106,7 +106,7 @@ class SettingsDialog(QtGui.QWidget):
         self.cancel_button = QtGui.QPushButton(self.horizontalLayoutWidget_6)
         self.cancel_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.cancel_button.setObjectName('cancel_button')
-        self.cancel_button.clicked.connect(self.cancel)
+        self.cancel_button.clicked.connect(self.close_window)
         self.horizontalLayout_7.addWidget(self.cancel_button)
         self.horizontalLayoutWidget_5 = QtGui.QWidget(settings_dialog)
         self.horizontalLayoutWidget_5.setGeometry(QtCore.QRect(10, 190, 223, 29))
@@ -130,10 +130,14 @@ class SettingsDialog(QtGui.QWidget):
         QtCore.QMetaObject.connectSlotsByName(settings_dialog)
         settings_dialog.setTabOrder(self.name_textbox, self.email_textbox)
         settings_dialog.setTabOrder(self.email_textbox, self.password_textbox)
-        settings_dialog.setTabOrder(self.password_textbox, self.partner_email_table)
-        settings_dialog.setTabOrder(self.partner_email_table, self.email_frequency_combo_box)
+        settings_dialog.setTabOrder(self.password_textbox, self.partner_emails_table)
+        settings_dialog.setTabOrder(self.partner_emails_table, self.email_frequency_combo_box)
         settings_dialog.setTabOrder(self.email_frequency_combo_box, self.save_button)
         settings_dialog.setTabOrder(self.save_button, self.cancel_button)
+
+        self.name_textbox.returnPressed.connect(self.save_user_settings)
+        self.email_textbox.returnPressed.connect(self.save_user_settings)
+        self.password_textbox.returnPressed.connect(self.save_user_settings)
 
         self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
 
@@ -148,9 +152,9 @@ class SettingsDialog(QtGui.QWidget):
                                                                  QtGui.QApplication.UnicodeUTF8))
         self.partner_email_label.setText(QtGui.QApplication.translate('settings_dialog', 'Partners\' Emails:',
                                                                       None, QtGui.QApplication.UnicodeUTF8))
-        self.partner_email_table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate('settings_dialog',
+        self.partner_emails_table.horizontalHeaderItem(0).setText(QtGui.QApplication.translate('settings_dialog',
                                                                                               'Email Address(es)', None,
-                                                                                              QtGui.QApplication.UnicodeUTF8))
+                                                                                               QtGui.QApplication.UnicodeUTF8))
         self.save_button.setText(QtGui.QApplication.translate('settings_dialog', 'Save', None,
                                                               QtGui.QApplication.UnicodeUTF8))
         self.cancel_button.setText(QtGui.QApplication.translate('settings_dialog', 'Cancel', None,
@@ -169,17 +173,18 @@ class SettingsDialog(QtGui.QWidget):
             user_name = self.name_textbox.text()
             user_email = self.email_textbox.text()
             password = self.password_textbox.text()
-            partner_email_table = self.partner_email_table
+            partner_emails_table = self.partner_emails_table
             email_frequency = self.email_frequency_combo_box.currentText()
 
-            if self.are_fields_valid(user_name, user_email, password, partner_email_table):
-                partner_emails = self.partner_emails_to_comma_separated_list(self, partner_email_table)
+            if self.are_fields_valid(user_name, user_email, password, partner_emails_table):
+                partner_emails = self.partner_emails_to_comma_separated_list(self, partner_emails_table)
 
                 save_user_thread = threading.Thread(target=queries.save_user_data,
                                                     args=(user_name, user_email, password,
                                                           partner_emails, email_frequency))
                 save_user_thread.start()
 
+                self.close_window()
                 tray = QtGui.QSystemTrayIcon()
                 tray.showMessage('Success', 'Your credentials have been saved')
         except:
@@ -188,7 +193,7 @@ class SettingsDialog(QtGui.QWidget):
 
         self.save_button.setDisabled(False)
 
-    def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_email_table):
+    def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_emails_table):
         valid_fields = True
 
         # validate user name
@@ -217,8 +222,8 @@ class SettingsDialog(QtGui.QWidget):
         column_index = 0
         is_table_empty = True
         is_item_selected = False
-        for row in xrange(partner_email_table.rowCount()):
-            email = partner_email_table.item(row, column_index)
+        for row in xrange(partner_emails_table.rowCount()):
+            email = partner_emails_table.item(row, column_index)
             if not email or not email.text():
                 continue
 
@@ -230,18 +235,18 @@ class SettingsDialog(QtGui.QWidget):
             else:
                 email.setBackground(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
 
-        for index in partner_email_table.selectedIndexes():  # check for emails that are currently selected
+        for index in partner_emails_table.selectedIndexes():  # check for emails that are currently selected
             is_item_selected = True
-            selected_email = partner_email_table.item(index.row(), index.column())
+            selected_email = partner_emails_table.item(index.row(), index.column())
             if not selected_email:
                 if not is_table_empty:
-                    partner_email_table.setItem(index.row(), index.column(), QtGui.QTableWidgetItem(''))
-                    partner_email_table.itemAt(index.row(), index.column()).\
+                    partner_emails_table.setItem(index.row(), index.column(), QtGui.QTableWidgetItem(''))
+                    partner_emails_table.itemAt(index.row(), index.column()).\
                         setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
                     valid_fields = False
                 else:
-                    partner_email_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
-                    partner_email_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
+                    partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
+                    partner_emails_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
                     valid_fields = False
             else:
                 validated_selected_email_text = self.email_regex.match(str(selected_email.text()))
@@ -252,24 +257,25 @@ class SettingsDialog(QtGui.QWidget):
                     selected_email.setBackground(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
 
         if is_table_empty and not is_item_selected:
-            partner_email_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
-            partner_email_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
+            partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
+            partner_emails_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
+            valid_fields = False
 
         return valid_fields
 
-    def scroll_partner_email_table_to_top(self):
-        self.partner_email_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
-        first_item = self.partner_email_table.item(0, 0)
-        self.partner_email_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
+    def scroll_partner_emails_table_to_top(self):
+        self.partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
+        first_item = self.partner_emails_table.item(0, 0)
+        self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
-    def cancel(self):
+    def close_window(self):
         self.name_textbox.setText('')
         self.name_textbox.setStyleSheet(self.get_successful_background_color(self))
         self.email_textbox.setText('')
         self.email_textbox.setStyleSheet(self.get_successful_background_color(self))
         self.password_textbox.setText('')
         self.password_textbox.setStyleSheet(self.get_successful_background_color(self))
-        self.partner_email_table.clearContents()
+        self.partner_emails_table.clearContents()
 
         self.name_textbox.setFocus()
 
