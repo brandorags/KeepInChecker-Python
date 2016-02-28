@@ -14,7 +14,7 @@ class SystemTray(object):
         quit_action = menu.addAction('Quit KeepInChecker')
         quit_action.triggered.connect(self.quit)
 
-        icon = QIcon('./images/font-awesome-10-25186.png')
+        icon = QIcon('./images/chevron-up.png')
         self.tray = QSystemTrayIcon()
         self.tray.setIcon(icon)
         self.tray.setContextMenu(menu)
@@ -28,6 +28,7 @@ class SystemTray(object):
         sys.exit()
 
     def settings(self):
+        self.settings_dialog.scroll_partner_email_table_to_top()
         self.settings_dialog.show()
         self.settings_dialog.activateWindow()
         self.settings_dialog.raise_()

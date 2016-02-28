@@ -37,10 +37,10 @@ class Users(db.Entity):
         return self.UserEmailPassword
 
     def get_PartnerEmails(self):
-        if not self.PartnerEmail:
+        if not self.PartnerEmails:
             return ''
 
-        return self.PartnerEmail
+        return self.PartnerEmails
 
     def get_EmailFrequency(self):
         if not self.EmailFrequency:

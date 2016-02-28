@@ -17,7 +17,7 @@ def save_user_data(user_name, user_email, user_email_password,
     hashed_password = pbkdf2_sha512.encrypt(user_email_password, rounds=40000, salt_size=16)
 
     Users(UserName=user_name, UserEmail=user_email, UserEmailPassword=hashed_password,
-          PartnerEmail=partner_email, EmailFrequency=email_frequency)
+          PartnerEmails=partner_email, EmailFrequency=email_frequency)
 
 
 @db_session
@@ -33,8 +33,8 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
         hashed_password = pbkdf2_sha512.encrypt(user_email_password, rounds=40000, salt_size=16)
         existing_user.UserEmailPassword = hashed_password
 
-    if existing_user.PartnerEmail != partner_email:
-        existing_user.PartnerEmail = partner_email
+    if existing_user.PartnerEmails != partner_email:
+        existing_user.PartnerEmails = partner_email
 
     if existing_user.EmailFrequency != email_frequency:
         existing_user.EmailFrequency = email_frequency
