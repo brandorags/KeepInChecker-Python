@@ -14,7 +14,7 @@ import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from PySide import QtCore, QtGui
-from database import queries
+from database import queries, entities
 
 
 class SettingsDialog(QtGui.QWidget):
@@ -22,7 +22,7 @@ class SettingsDialog(QtGui.QWidget):
         QtGui.QWidget.__init__(self)
         self.setup_ui(self)
 
-        self.email_regex = re.compile('^[\w\.\+\-]+@[\w]+\.[a-z]{2,3}$')
+        self.email_regex = re.compile('^[\w\.\+\-]+@[\w]+\.[a-z]{2,6}$')
 
     def setup_ui(self, settings_dialog):
         settings_dialog.setObjectName('settings_dialog')
@@ -268,6 +268,19 @@ class SettingsDialog(QtGui.QWidget):
         first_item = self.partner_emails_table.item(0, 0)
         self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
+    def set_user_settings_on_open(self):
+        user = queries.get_users()[0]
+        if isinstance(user, entities.Users):
+            self.name_textbox.setText(user.get_UserName())
+            self.email_textbox.setText(user.get_UserEmail())
+            self.password_textbox.setText(user.get_UserEmailPassword())
+
+            partner_emails = user.get_PartnerEmails().split(', ')
+            row_index = 0
+            for partner_email in partner_emails:
+                self.partner_emails_table.setItem(row_index, 0, QtGui.QTableWidgetItem(partner_email))
+                row_index += 1
+
     def close_window(self):
         self.name_textbox.setText('')
         self.name_textbox.setStyleSheet(self.get_successful_background_color(self))
@@ -304,4 +317,4 @@ class SettingsDialog(QtGui.QWidget):
             else:
                 partner_emails_as_comma_sep_list = str(partner_email.text())
 
-        return partner_emails_as_comma_sep_list.strip()
+        return partner_emails_as_comma_sep_list.rstrip(', ')
