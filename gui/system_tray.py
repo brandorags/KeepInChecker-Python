@@ -29,6 +29,7 @@ class SystemTray(object):
 
     def settings(self):
         self.settings_dialog.scroll_partner_emails_table_to_top()
+        self.settings_dialog.set_user_settings_on_open()
         self.settings_dialog.show()
         self.settings_dialog.activateWindow()
         self.settings_dialog.raise_()
