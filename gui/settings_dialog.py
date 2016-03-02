@@ -221,7 +221,6 @@ class SettingsDialog(QtGui.QWidget):
         # validate partner emails
         column_index = 0
         is_table_empty = True
-        is_item_selected = False
         for row in xrange(partner_emails_table.rowCount()):
             email = partner_emails_table.item(row, column_index)
             if not email or not email.text():
@@ -235,28 +234,7 @@ class SettingsDialog(QtGui.QWidget):
             else:
                 email.setBackground(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
 
-        for index in partner_emails_table.selectedIndexes():  # check for emails that are currently selected
-            is_item_selected = True
-            selected_email = partner_emails_table.item(index.row(), index.column())
-            if not selected_email:
-                if not is_table_empty:
-                    partner_emails_table.setItem(index.row(), index.column(), QtGui.QTableWidgetItem(''))
-                    partner_emails_table.itemAt(index.row(), index.column()).\
-                        setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
-                    valid_fields = False
-                else:
-                    partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
-                    partner_emails_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
-                    valid_fields = False
-            else:
-                validated_selected_email_text = self.email_regex.match(str(selected_email.text()))
-                if not validated_selected_email_text:
-                    selected_email.setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
-                    valid_fields = False
-                else:
-                    selected_email.setBackground(QtGui.QBrush(QtGui.QColor(255, 255, 255)))
-
-        if is_table_empty and not is_item_selected:
+        if is_table_empty:
             partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
             partner_emails_table.itemAt(0, 0).setBackground(QtGui.QBrush(QtGui.QColor(255, 186, 186)))
             valid_fields = False
