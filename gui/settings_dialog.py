@@ -138,6 +138,7 @@ class SettingsDialog(QtGui.QWidget):
         self.name_textbox.returnPressed.connect(self.save_user_settings)
         self.email_textbox.returnPressed.connect(self.save_user_settings)
         self.password_textbox.returnPressed.connect(self.save_user_settings)
+        self.partner_emails_table.currentItemChanged.connect(self.print_text)
 
         self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
 
@@ -318,3 +319,6 @@ class SettingsDialog(QtGui.QWidget):
                 partner_emails_as_comma_sep_list = str(partner_email.text())
 
         return partner_emails_as_comma_sep_list.rstrip(', ')
+
+    def print_text(self):
+        print 'here\'s some text!'
