@@ -1,7 +1,14 @@
+import keep_in_checker
+import multiprocessing
 import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from settings_dialog import SettingsDialog
 from PySide.QtGui import *
+
+
+keep_in_checker_backend = multiprocessing.Process(target=keep_in_checker.main)
 
 
 class SystemTray(object):
@@ -35,10 +42,13 @@ class SystemTray(object):
         self.settings_dialog.raise_()
 
     def quit(self):
+        keep_in_checker_backend.terminate()
         sys.exit()
 
 
 if __name__ == '__main__':
+    keep_in_checker_backend.start()
+
     system_tray_gui = SystemTray()
     system_tray_gui.app.setQuitOnLastWindowClosed(False)
     system_tray_gui.run()

@@ -7,7 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
-import threading
+import multiprocessing
 import re
 import sys
 import os.path
@@ -179,10 +179,10 @@ class SettingsDialog(QtGui.QWidget):
             if self.are_fields_valid(user_name, user_email, password, partner_emails_table):
                 partner_emails = self.partner_emails_to_comma_separated_list(self, partner_emails_table)
 
-                save_user_thread = threading.Thread(target=queries.save_user_data,
-                                                    args=(user_name, user_email, password,
-                                                          partner_emails, email_frequency))
-                save_user_thread.start()
+                save_user_process = multiprocessing.Process(target=queries.save_user_data,
+                                                            args=(user_name, user_email, password,
+                                                                  partner_emails, email_frequency))
+                save_user_process.start()
 
                 self.close_window()
                 tray = QtGui.QSystemTrayIcon()
