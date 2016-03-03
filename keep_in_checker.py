@@ -2,13 +2,9 @@ import random
 import threading
 
 from utilities import browser_utilities, email_utilities
+from database import queries
 from multiprocessing import Queue
-from getpass import getpass
 from time import sleep
-
-
-def show_welcome_message():
-    print('\n---------- KeepInChecker v1.0 ----------')
 
 
 def record_internet_traffic():
@@ -21,11 +17,9 @@ def record_internet_traffic():
 
 
 def main():
-    show_welcome_message()
-    # user_name = raw_input('Your name: ')
-    # user_email = raw_input('Your Email Address: ')
-    # user_password = getpass('Your Password: ')
-    # recipient_email = raw_input('Your Accountability Partner\'s Email Address: ')
+    user = queries.get_users()
+    if not browser_utilities.is_browser_open() and not user[0]:
+        return
 
     internet_traffic = record_internet_traffic()
 
@@ -39,5 +33,3 @@ def main():
 # while True:
 #     interval = random.randint(60, 240)
 #     sleep(interval)
-if browser_utilities.is_browser_open():
-    main()
