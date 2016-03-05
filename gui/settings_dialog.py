@@ -247,7 +247,11 @@ class SettingsDialog(QtGui.QWidget):
         self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
     def set_user_settings_on_open(self):
-        user = queries.get_users()[0]
+        users = queries.get_users()
+        if not users:
+            return
+
+        user = users[0]
         if isinstance(user, entities.Users):
             self.name_textbox.setText(user.get_UserName())
             self.email_textbox.setText(user.get_UserEmail())
