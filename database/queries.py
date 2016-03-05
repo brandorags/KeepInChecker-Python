@@ -1,4 +1,5 @@
 from passlib.hash import pbkdf2_sha512
+from constants import constants
 from database.entities import *
 from time import tzname
 
@@ -19,6 +20,8 @@ def save_user_data(user_name, user_email, user_email_password,
     Users(UserName=user_name, UserEmail=user_email, UserEmailPassword=hashed_password,
           PartnerEmails=partner_email, EmailFrequency=email_frequency)
 
+    constants.current_user = get_users()[0]
+
 
 @db_session
 def update_user_data(existing_user, user_name, user_email, user_email_password,
@@ -38,6 +41,8 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
 
     if existing_user.EmailFrequency != email_frequency:
         existing_user.EmailFrequency = email_frequency
+
+    constants.current_user = get_users()[0]
 
 
 @db_session

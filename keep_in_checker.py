@@ -4,6 +4,7 @@ import threading
 from utilities import browser_utilities, email_utilities
 from database import queries
 from multiprocessing import Queue
+from constants import constants
 from time import sleep
 
 
@@ -16,18 +17,24 @@ def record_internet_traffic():
     return internet_traffic_queue.get()
 
 
+def initialize_current_user():
+    users = queries.get_users()
+    if users:
+        constants.current_user = users[0]
+
+
 def main():
-    user = queries.get_users()
-    if not browser_utilities.is_browser_open() and not user[0]:
+    initialize_current_user()
+    if not browser_utilities.is_browser_open() or not constants.current_user:
         return
 
     internet_traffic = record_internet_traffic()
-
     if internet_traffic:
         for item in internet_traffic:
             print(item)
 
-    # email_utilities.send_email(user_name, user_email, user_password, recipient_email)
+    email_utilities.send_email(constants.current_user.UserName, constants.current_user.UserEmail,
+                               constants.current_user.UserEmailPassword, constants.current_user.PartnerEmails)
 
 
 # while True:
