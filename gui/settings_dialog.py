@@ -15,6 +15,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from PySide import QtCore, QtGui
 from database import queries, entities
+from constants import constants
 
 
 class SettingsDialog(QtGui.QWidget):
@@ -247,15 +248,18 @@ class SettingsDialog(QtGui.QWidget):
         self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
     def set_user_settings_on_open(self):
-        users = queries.get_users()
-        if not users:
-            return
+        user = None
+        if constants.current_user:
+            user = constants.current_user
+        else:
+            users = queries.get_users()
+            if users:
+                user = users[0]
 
-        user = users[0]
         if isinstance(user, entities.Users):
             self.name_textbox.setText(user.get_UserName())
             self.email_textbox.setText(user.get_UserEmail())
-            self.password_textbox.setText(user.get_UserEmailPassword())
+            self.password_textbox.setText(constants.cryptographer.decrypt(bytes(user.get_UserEmailPassword())))
 
             partner_emails = user.get_PartnerEmails().split(', ')
             row_index = 0

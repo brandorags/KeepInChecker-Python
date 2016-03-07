@@ -34,7 +34,8 @@ def main():
             print(item)
 
     email_utilities.send_email(constants.current_user.UserName, constants.current_user.UserEmail,
-                               constants.current_user.UserEmailPassword, constants.current_user.PartnerEmails)
+                               constants.cryptographer.decrypt(bytes(constants.current_user.UserEmailPassword)),
+                               constants.current_user.PartnerEmails)
 
 
 # while True:
