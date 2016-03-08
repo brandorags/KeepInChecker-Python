@@ -1,8 +1,10 @@
-import keep_in_checker
 import multiprocessing
 import sys
 import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+import keep_in_checker
+import resources_rc
 
 from settings_dialog import SettingsDialog
 from PySide.QtGui import *
@@ -21,7 +23,7 @@ class SystemTray(object):
         quit_action = menu.addAction('Quit KeepInChecker')
         quit_action.triggered.connect(self.quit)
 
-        icon = QIcon('./images/chevron-up.png')
+        icon = QIcon(':/gui/images/chevron-up.png')
         self.tray = QSystemTrayIcon()
         self.tray.setIcon(icon)
         self.tray.setContextMenu(menu)
