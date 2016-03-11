@@ -19,6 +19,7 @@ from constants import constants
 
 
 class SettingsDialog(QtGui.QWidget):
+
     def __init__(self):
         QtGui.QWidget.__init__(self)
         self.setup_ui(self)

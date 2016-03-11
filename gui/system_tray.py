@@ -14,6 +14,7 @@ keep_in_checker_backend = multiprocessing.Process(target=keep_in_checker.main)
 
 
 class SystemTray(object):
+
     def __init__(self):
         self.app = QApplication(sys.argv)
 

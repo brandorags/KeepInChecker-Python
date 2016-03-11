@@ -3,6 +3,11 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from database import queries, entities
+from datetime import datetime
+
+
+date_last_email_was_sent = datetime.now()
+has_email_been_sent = True
 
 
 def send_email(sender_name, sender_email, sender_password, recipient):
