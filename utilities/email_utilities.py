@@ -10,18 +10,18 @@ date_last_email_was_sent = datetime.now()
 has_email_been_sent = True
 
 
-def send_email(sender_name, sender_email, sender_password, recipient):
-    msg = MIMEMultipart()
-    msg['From'] = sender_email
-    msg['To'] = recipient
-    msg['Subject'] = 'KeepInChecker User Activity Report for ' + sender_name
-    msg.attach(MIMEText(generate_body_text(sender_name), 'plain'))
+def send_email(sender_name, sender_email, sender_password, recipients):
+    message = MIMEMultipart()
+    message['From'] = sender_email
+    message['Bcc'] = recipients
+    message['Subject'] = 'KeepInChecker User Activity Report for ' + sender_name
+    message.attach(MIMEText(generate_body_text(sender_name), 'plain'))
 
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(sender_email, sender_password)
-    text = msg.as_string()
-    server.sendmail(sender_email, recipient, text)
+    text = message.as_string()
+    server.sendmail(sender_email, recipients, text)
     server.quit()
 
 

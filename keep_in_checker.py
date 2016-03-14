@@ -41,6 +41,8 @@ def send_scheduled_email():
 
 
 def main():
+    initialize_current_user()
+
     while True:
         interval = random.randint(60, 240)
         sleep(interval)
