@@ -13,7 +13,6 @@ has_email_been_sent = True
 def send_email(sender_name, sender_email, sender_password, recipients):
     message = MIMEMultipart()
     message['From'] = sender_email
-    message['Bcc'] = recipients
     message['Subject'] = 'KeepInChecker User Activity Report for ' + sender_name
     message.attach(MIMEText(generate_body_text(sender_name), 'plain'))
 
