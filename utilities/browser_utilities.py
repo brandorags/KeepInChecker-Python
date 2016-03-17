@@ -42,16 +42,12 @@ def get_current_network_interface():
     return current_network_interface
 
 
-def parse_packet(packet_arrival_time, packet):
+def save_packet(packet_arrival_time, packet):
     packet_map = {}
+    packet_text_only = packet_utilities.remove_hex_values_from_packet(packet)
 
     for keyword in constants.packet_keywords:
-        if keyword == 'GET':
-            packet_map[keyword] = packet_utilities.parse_get_data(keyword, packet)
-        elif keyword == 'Host':
-            packet_map[keyword] = packet_utilities.parse_host_data(keyword, packet)
-        else:
-            packet_map[keyword] = packet_utilities.parse_referer_data(keyword, packet)
+        packet_map[keyword] = packet_utilities.parse_packet_data_by_keyword(packet_text_only, keyword)
 
     packet_map['Time'] = datetime.strftime(packet_arrival_time, '%d-%m-%Y %H:%M:%S')
 
@@ -123,7 +119,7 @@ def scan_user_internet_traffic(thread_queue):
                         obj_word_found_datetime[obj_word] = arrival_time
                         output.append('The word ' + obj_word + ' was found at ' + str(arrival_time))
 
-                        obj_packets_data.append(parse_packet(arrival_time, str(packet)))
+                        obj_packets_data.append(save_packet(arrival_time, str(packet)))
                         break
 
             if obj_word_found:
