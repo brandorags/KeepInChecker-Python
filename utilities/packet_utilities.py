@@ -15,7 +15,10 @@ def remove_hex_values_from_packet(packet):
 
 
 def parse_packet_data_by_keyword(packet, keyword):
-    if keyword != 'GET':
-        return packet.split(keyword + ': ')[1].split('..')[0]
+    try:
+        if keyword != 'GET':
+            return packet.split(keyword + ': ')[1].split('..')[0]
 
-    return packet.split(keyword + ' ')[1].split(' ')[0]
+        return packet.split(keyword + ' ')[1].split(' ')[0]
+    except:
+        return ''
