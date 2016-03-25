@@ -16,11 +16,13 @@ def send_email(sender_name, sender_email, sender_password, recipients):
     message['Subject'] = 'KeepInChecker User Activity Report for ' + sender_name
     message.attach(MIMEText(generate_body_text(sender_name), 'plain'))
 
+    recipients_list = [recipient.strip(' ') for recipient in recipients.split(',')]
+
     server = smtplib.SMTP('smtp.gmail.com', 587)
     server.starttls()
     server.login(sender_email, sender_password)
     text = message.as_string()
-    server.sendmail(sender_email, recipients, text)
+    server.sendmail(sender_email, recipients_list, text)
     server.quit()
 
 
