@@ -10,9 +10,9 @@ from time import sleep
 
 
 def initialize_current_user():
-    users = queries.get_users()
-    if users:
-        constants.current_user = users[0]
+    user = queries.get_current_user()
+    if user:
+        constants.current_user = user
 
 
 def record_internet_traffic():
@@ -25,16 +25,16 @@ def record_internet_traffic():
 
 
 def send_scheduled_email():
-    email_frequency = 1 if constants.current_user.EmailFrequency == 'Daily' else 7
+    email_frequency = 1 if constants.current_user['EmailFrequency'] == 'Daily' else 7
     time_of_last_email_sent_to_now = datetime.now() - email_utilities.date_last_email_was_sent
 
     if time_of_last_email_sent_to_now.days == email_frequency:
         email_utilities.has_email_been_sent = False
 
     if not email_utilities.has_email_been_sent:
-        email_utilities.send_email(constants.current_user.UserName, constants.current_user.UserEmail,
-                                   constants.cryptographer.decrypt(bytes(constants.current_user.UserEmailPassword)),
-                                   constants.current_user.PartnerEmails)
+        email_utilities.send_email(constants.current_user['UserName'], constants.current_user['UserEmail'],
+                                   constants.cryptographer.decrypt(bytes(constants.current_user['UserEmailPassword'])),
+                                   constants.current_user['PartnerEmails'])
 
         email_utilities.has_email_been_sent = True
         email_utilities.date_last_email_was_sent = datetime.now()

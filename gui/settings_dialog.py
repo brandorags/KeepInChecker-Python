@@ -14,8 +14,8 @@ import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 from PySide import QtCore, QtGui
-from database import queries, entities
 from constants import constants
+from database import queries
 
 
 class SettingsDialog(QtGui.QWidget):
@@ -249,24 +249,23 @@ class SettingsDialog(QtGui.QWidget):
         self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
     def set_user_settings_on_open(self):
-        user = None
         if constants.current_user:
             user = constants.current_user
         else:
-            users = queries.get_users()
-            if users:
-                user = users[0]
+            user = queries.get_current_user()
 
-        if isinstance(user, entities.Users):
-            self.name_textbox.setText(user.get_UserName())
-            self.email_textbox.setText(user.get_UserEmail())
-            self.password_textbox.setText(constants.cryptographer.decrypt(bytes(user.get_UserEmailPassword())))
+        if not user:
+            return
 
-            partner_emails = user.get_PartnerEmails().split(', ')
-            row_index = 0
-            for partner_email in partner_emails:
-                self.partner_emails_table.setItem(row_index, 0, QtGui.QTableWidgetItem(partner_email))
-                row_index += 1
+        self.name_textbox.setText(user['UserName'])
+        self.email_textbox.setText(user['UserEmail'])
+        self.password_textbox.setText(constants.cryptographer.decrypt(bytes(user['UserEmailPassword'])))
+
+        partner_emails = user['PartnerEmails'].split(', ')
+        row_index = 0
+        for partner_email in partner_emails:
+            self.partner_emails_table.setItem(row_index, 0, QtGui.QTableWidgetItem(partner_email))
+            row_index += 1
 
     def close_window(self):
         self.name_textbox.setText('')
