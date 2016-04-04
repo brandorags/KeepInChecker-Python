@@ -9,6 +9,6 @@ pcapy==0.10.9
 pony==0.6.2
 pyasn1==0.1.9
 pycparser==2.14
+PyInstaller==3.1.1
 PySide==1.2.4
 six==1.10.0
-wheel==0.24.0

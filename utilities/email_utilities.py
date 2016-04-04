@@ -2,7 +2,7 @@ import smtplib
 
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from database import queries, entities
+from database import queries
 from datetime import datetime
 
 
@@ -36,9 +36,8 @@ def generate_body_text(sender_name):
     if packets:
         packet_data = ''
         for packet in packets:
-            if isinstance(packet, entities.Packets):
-                packet_data += '\n' + packet.get_DateReceived() + ' ' + packet.get_Timezone() + ' ' + \
-                              packet.get_Get() + ' ' + packet.get_Host() + ' ' + packet.get_Referer()
+            packet_data += '\n' + packet['DateReceived'] + ' ' + packet['Timezone'] + ' ' + \
+                          packet['Get'] + ' ' + packet['Host'] + ' ' + packet['Referer']
 
         email_body += str(len(packets)) + ' questionable sites were visited:\n'
         email_body += packet_data
