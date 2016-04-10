@@ -1,6 +1,9 @@
 .idea/
 venv/
 __pycache__/
+build/
+dist/
 *.pyc
 *.sqlite
 *.sqlite-journal
+*.spec
