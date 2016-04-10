@@ -1,5 +1,4 @@
-import sqlite3
-
+from database.db_session import DbSession
 from constants import constants
 from time import tzname
 
@@ -96,29 +95,3 @@ def get_current_user():
     db.close()
 
     return current_user
-
-
-class DbSession(object):
-
-    def __init__(self):
-        self.connection = sqlite3.connect('/Users/Brando/Repositories/Bitbucket/KeepInChecker/database/KeepInChecker.sqlite')
-        self.connection.row_factory = sqlite3.Row
-        self.cursor = self.connection.cursor()
-
-    def commit(self):
-        self.connection.commit()
-
-    def close(self):
-        self.cursor.close()
-        self.connection.close()
-
-    def _get_column_count(self, table_name):
-        self.connection.row_factory = sqlite3.Row
-        self.cursor = self.connection.cursor()
-
-        self.cursor.execute('SELECT * FROM ' + table_name)
-        row = self.cursor.fetchone()
-
-        self.connection.close()
-
-        return len(row)
