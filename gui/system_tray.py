@@ -7,6 +7,7 @@ import keep_in_checker
 import resources_rc
 
 from settings_dialog import SettingsDialog
+from database.db_session import DbSession
 from PySide.QtGui import *
 
 
@@ -50,6 +51,9 @@ class SystemTray(object):
 
 
 if __name__ == '__main__':
+    db = DbSession()
+    db.create_tables_if_none_exist()
+
     keep_in_checker_backend.start()
 
     system_tray_gui = SystemTray()

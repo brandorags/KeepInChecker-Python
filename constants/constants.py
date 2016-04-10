@@ -26,6 +26,12 @@ current credentials
 current_user = None
 
 """
+database_path - the path to the database; this frees up searching for
+the filename every time a database transaction is made
+"""
+database_path = None
+
+"""
 cryptographer - object used for encrypting/decrypting data before it
 gets sent to the database
 """
