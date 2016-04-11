@@ -1,5 +1,6 @@
 from database.db_session import DbSession
-from constants import constants
+from constants import constants, secret_key
+from utilities import security_utilities
 from time import tzname
 
 
@@ -11,11 +12,11 @@ def save_user_data(user_name, user_email, user_email_password,
                          user_email_password, partner_emails, email_frequency)
         return
 
-    hashed_password = constants.cryptographer.encrypt(bytes(user_email_password))
+    encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
 
     db = DbSession()
     sql = 'INSERT INTO Users (UserName, UserEmail, UserEmailPassword, PartnerEmails, EmailFrequency) ' \
-          'VALUES(\'' + user_name + '\'' + ',\'' + user_email + '\'' + ',\'' + hashed_password + '\'' + \
+          'VALUES(\'' + user_name + '\'' + ',\'' + user_email + '\'' + ',\'' + encrypted_password + '\'' + \
           ',\'' + partner_emails + '\'' + ',\'' + email_frequency + '\')'
 
     db.cursor.execute(sql)
@@ -37,9 +38,9 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
     if existing_user['UserEmail'] != user_email:
         update_values += ' UserEmail = \'' + user_email + '\','
 
-    if constants.cryptographer.decrypt(bytes(existing_user['UserEmailPassword'])) != bytes(user_email_password):
-        hashed_password = constants.cryptographer.encrypt(bytes(user_email_password))
-        update_values += ' UserEmailPassword = \'' + hashed_password + '\','
+    if security_utilities.decode(existing_user['UserEmailPassword'], secret_key.key) != user_email_password:
+        encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
+        update_values += ' UserEmailPassword = \'' + encrypted_password + '\','
 
     if existing_user['PartnerEmails'] != partner_emails:
         update_values += ' PartnerEmails = \'' + partner_emails + '\','
