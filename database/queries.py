@@ -31,31 +31,38 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
     db = DbSession()
     sql = 'UPDATE Users SET'
     update_values = ''
+    needs_update = False
 
     if existing_user['UserName'] != user_name:
         update_values += ' UserName = \'' + user_name + '\','
+        needs_update = True
 
     if existing_user['UserEmail'] != user_email:
         update_values += ' UserEmail = \'' + user_email + '\','
+        needs_update = True
 
     if security_utilities.decode(existing_user['UserEmailPassword'], secret_key.key) != user_email_password:
         encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
         update_values += ' UserEmailPassword = \'' + encrypted_password + '\','
+        needs_update = True
 
     if existing_user['PartnerEmails'] != partner_emails:
         update_values += ' PartnerEmails = \'' + partner_emails + '\','
+        needs_update = True
 
     if existing_user['EmailFrequency'] != email_frequency:
         update_values += ' EmailFrequency = \'' + email_frequency + '\''
+        needs_update = True
 
-    update_values = update_values.strip(',')
-    sql += update_values + ' WHERE UserId = 1'
+    if needs_update:
+        update_values = update_values.strip(',')
+        sql += update_values + ' WHERE UserId = 1'
 
-    db.cursor.execute(sql)
-    db.commit()
-    db.close()
+        db.cursor.execute(sql)
+        db.commit()
+        db.close()
 
-    constants.current_user = get_current_user()
+        constants.current_user = get_current_user()
 
 
 def insert_packets(obj_packets_data):
