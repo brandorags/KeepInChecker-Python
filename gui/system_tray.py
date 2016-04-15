@@ -6,7 +6,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 import keep_in_checker
 import resources_rc
 
-from settings_dialog import SettingsDialog
+from gui.settings_dialog import SettingsDialog
 from database.db_session import DbSession
 from PySide.QtGui import *
 
