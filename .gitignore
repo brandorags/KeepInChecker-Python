@@ -6,4 +6,3 @@ dist/
 *.pyc
 *.sqlite
 *.sqlite-journal
-*.spec
