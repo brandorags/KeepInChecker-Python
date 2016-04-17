@@ -85,13 +85,29 @@ class LauncherDialog(QtGui.QWidget):
         operating_system = platform.system()
 
         if 'darwin' in operating_system.lower():
-            path_to_launcher = os.path.realpath(os.path.dirname(sys.argv[0]))
-            os.system('echo "' + password + '" | sudo -S -k open ' + path_to_launcher + '/KeepInChecker.app')
+            # because of how the path is generated with .app files, we need to remove the directories
+            # from the launcher's path to correctly form the path where the app resides
+            # so, original path = /Users/User/Launcher.app/Contents/MacOS
+            # and new_path = /Users/User
+            path_to_app = self._format_path(os.path.realpath(os.path.dirname(sys.argv[0])), 3)
+
+            cmd = 'echo "' + password + '" | sudo -S ' + path_to_app + '/KeepInChecker.app/Contents' \
+                '/MacOS/KeepInChecker.app &'
+
+            os.system(cmd)
 
         sys.exit()
 
     def cancel(self):
         sys.exit()
+
+    def _format_path(self, path, number_of_dirs_to_remove_from_path):
+        formatted_path = path.split('/')
+
+        for i in xrange(0, number_of_dirs_to_remove_from_path):
+            del formatted_path[len(formatted_path) - 1]
+
+        return '/'.join(formatted_path)
 
 
 if __name__ == '__main__':

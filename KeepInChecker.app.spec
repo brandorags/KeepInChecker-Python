@@ -34,5 +34,5 @@ coll = COLLECT(exe,
                name='KeepInChecker.app')
 app = BUNDLE(coll,
              name='KeepInChecker.app',
-             icon=None,
+             icon='gui/images/chevron-up.icns',
              bundle_identifier=None)
