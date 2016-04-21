@@ -7,6 +7,7 @@
 #
 # WARNING! All changes made in this file will be lost!
 
+import multiprocessing
 import platform
 import sys
 import os
@@ -93,8 +94,10 @@ class LauncherDialog(QtGui.QWidget):
 
             cmd = 'echo "' + password + '" | sudo -S ' + path_to_app + '/KeepInChecker.app/Contents' \
                 '/MacOS/KeepInChecker.app &'
-
             os.system(cmd)
+
+            remove_command_process = multiprocessing.Process(target=self._remove_command_from_shell_history)
+            remove_command_process.start()
 
         sys.exit()
 
@@ -109,6 +112,26 @@ class LauncherDialog(QtGui.QWidget):
 
         return '/'.join(formatted_path)
 
+    def _get_shell_type(self):
+        return os.getenv('SHELL').split('/')[2]
+
+    def _remove_command_from_shell_history(self):
+        current_username = os.popen('whoami').read().strip()
+        hist_file_path = '/Users/' + current_username + '/.' + self._get_shell_type() + '_history'
+        hist_file = open(hist_file_path, 'r')
+
+        lines = hist_file.readlines()
+        hist_file.close()
+
+        hist_file = open(hist_file_path, 'w')
+        for i in xrange(0, len(lines)):
+            if i != len(lines) - 1:
+                hist_file.write(lines[i])
+            elif 'keepinchecker' not in lines[i].lower():
+                hist_file.write(lines[i])
+
+        hist_file.truncate()
+        hist_file.close()
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)
