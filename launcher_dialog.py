@@ -8,6 +8,7 @@
 # WARNING! All changes made in this file will be lost!
 
 import multiprocessing
+import subprocess
 import platform
 import sys
 import os
@@ -86,6 +87,9 @@ class LauncherDialog(QtGui.QWidget):
         operating_system = platform.system()
 
         if 'darwin' in operating_system.lower():
+            if not self._is_password_correct(password):
+                sys.exit()
+
             # because of how the path is generated with .app files, we need to remove the directories
             # from the launcher's path to correctly form the path where the app resides
             # so, original path = /Users/User/Launcher.app/Contents/MacOS
@@ -103,6 +107,16 @@ class LauncherDialog(QtGui.QWidget):
 
     def cancel(self):
         sys.exit()
+
+    def _is_password_correct(self, password):
+        os.system('echo ' + password + ' | sudo -S -k mkdir /opt/KeepInCheckerTestTestTest')
+
+        dirs = subprocess.check_output('ls /opt', stderr=subprocess.PIPE, shell=True)
+        if 'KeepInCheckerTestTestTest' in dirs:
+            os.system('echo ' + password + ' | sudo -S -k rmdir /opt/KeepInCheckerTestTestTest')
+            return True
+
+        return False
 
     def _format_path(self, path, number_of_dirs_to_remove_from_path):
         formatted_path = path.split('/')
