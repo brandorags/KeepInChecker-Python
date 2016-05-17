@@ -2,13 +2,12 @@
 
 # Form implementation generated from reading ui file 'gui/ui_files/launcher_dialog.ui'
 #
-# Created: Wed Apr 13 23:22:23 2016
+# Created: Sun May 15 22:52:21 2016
 #      by: pyside-uic 0.2.15 running on PySide 1.2.4
 #
 # WARNING! All changes made in this file will be lost!
 
 import multiprocessing
-import subprocess
 import platform
 import sys
 import os
@@ -24,43 +23,87 @@ class LauncherDialog(QtGui.QWidget):
 
     def setup_ui(self, launcher_dialog):
         launcher_dialog.setObjectName('launcher_dialog')
-        launcher_dialog.resize(313, 191)
+        launcher_dialog.resize(321, 212)
         self.verticalLayoutWidget = QtGui.QWidget(launcher_dialog)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(20, 0, 271, 41))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(0, 0, 321, 51))
         self.verticalLayoutWidget.setObjectName('verticalLayoutWidget')
         self.verticalLayout = QtGui.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName('verticalLayout')
         self.launcher_description_label = QtGui.QLabel(self.verticalLayoutWidget)
+        self.launcher_description_label.setAlignment(QtCore.Qt.AlignCenter)
         self.launcher_description_label.setObjectName('launcher_description_label')
         self.verticalLayout.addWidget(self.launcher_description_label)
         self.horizontalLayoutWidget = QtGui.QWidget(launcher_dialog)
-        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(20, 40, 261, 51))
+        self.horizontalLayoutWidget.setGeometry(QtCore.QRect(0, 50, 321, 51))
         self.horizontalLayoutWidget.setObjectName('horizontalLayoutWidget')
-        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
-        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_2.setObjectName('horizontalLayout_2')
+        self.horizontalLayout = QtGui.QHBoxLayout(self.horizontalLayoutWidget)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout.setObjectName('horizontalLayout')
+        spacerItem = QtGui.QSpacerItem(23, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
         self.password_label = QtGui.QLabel(self.horizontalLayoutWidget)
         self.password_label.setObjectName('password_label')
-        self.horizontalLayout_2.addWidget(self.password_label)
+        self.horizontalLayout.addWidget(self.password_label)
+        spacerItem1 = QtGui.QSpacerItem(7, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem1)
         self.password_textbox = QtGui.QLineEdit(self.horizontalLayoutWidget)
-        self.password_textbox.setEchoMode(QtGui.QLineEdit.Password)
         self.password_textbox.setObjectName('password_textbox')
-        self.horizontalLayout_2.addWidget(self.password_textbox)
+        self.password_textbox.setEchoMode(QtGui.QLineEdit.Password)
+        self.password_textbox.textChanged.connect(self.hide_incorrect_password_label)
+        self.horizontalLayout.addWidget(self.password_textbox)
+        spacerItem2 = QtGui.QSpacerItem(26, 20, QtGui.QSizePolicy.Fixed, QtGui.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem2)
         self.horizontalLayoutWidget_2 = QtGui.QWidget(launcher_dialog)
-        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(20, 90, 271, 80))
+        self.horizontalLayoutWidget_2.setGeometry(QtCore.QRect(0, 100, 321, 71))
         self.horizontalLayoutWidget_2.setObjectName('horizontalLayoutWidget_2')
-        self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
-        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout_3.setObjectName('horizontalLayout_3')
+        self.horizontalLayout_2 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_2)
+        self.horizontalLayout_2.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_2.setObjectName('horizontalLayout_2')
         self.ok_button = QtGui.QPushButton(self.horizontalLayoutWidget_2)
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.ButtonText, brush)
+        brush = QtGui.QBrush(QtGui.QColor(0, 0, 0))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.ButtonText, brush)
+        brush = QtGui.QBrush(QtGui.QColor(106, 104, 100))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.ButtonText, brush)
+        self.ok_button.setPalette(palette)
+        self.ok_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.ok_button.setObjectName('ok_button')
         self.ok_button.clicked.connect(self.launch_application)
-        self.horizontalLayout_3.addWidget(self.ok_button)
+        self.horizontalLayout_2.addWidget(self.ok_button)
         self.cancel_button = QtGui.QPushButton(self.horizontalLayoutWidget_2)
+        self.cancel_button.setCursor(QtCore.Qt.PointingHandCursor)
         self.cancel_button.setObjectName('cancel_button')
         self.cancel_button.clicked.connect(self.cancel)
-        self.horizontalLayout_3.addWidget(self.cancel_button)
+        self.horizontalLayout_2.addWidget(self.cancel_button)
+        self.horizontalLayoutWidget_3 = QtGui.QWidget(launcher_dialog)
+        self.horizontalLayoutWidget_3.setGeometry(QtCore.QRect(0, 170, 321, 31))
+        self.horizontalLayoutWidget_3.setObjectName('horizontalLayoutWidget_3')
+        self.horizontalLayout_3 = QtGui.QHBoxLayout(self.horizontalLayoutWidget_3)
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_3.setObjectName('horizontalLayout_3')
+        self.incorrect_password_label = QtGui.QLabel(self.horizontalLayoutWidget_3)
+        self.incorrect_password_label.setEnabled(True)
+        palette = QtGui.QPalette()
+        brush = QtGui.QBrush(QtGui.QColor(255, 0, 128))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Active, QtGui.QPalette.WindowText, brush)
+        brush = QtGui.QBrush(QtGui.QColor(255, 0, 128))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Inactive, QtGui.QPalette.WindowText, brush)
+        brush = QtGui.QBrush(QtGui.QColor(69, 69, 69))
+        brush.setStyle(QtCore.Qt.SolidPattern)
+        palette.setBrush(QtGui.QPalette.Disabled, QtGui.QPalette.WindowText, brush)
+        self.incorrect_password_label.setPalette(palette)
+        self.incorrect_password_label.setAlignment(QtCore.Qt.AlignCenter)
+        self.incorrect_password_label.setObjectName('incorrect_password_label')
+        self.incorrect_password_label.hide()
+        self.horizontalLayout_3.addWidget(self.incorrect_password_label)
 
         self.retranslate_ui(launcher_dialog)
         QtCore.QMetaObject.connectSlotsByName(launcher_dialog)
@@ -72,15 +115,18 @@ class LauncherDialog(QtGui.QWidget):
     def retranslate_ui(self, launcher_dialog):
         launcher_dialog.setWindowTitle(QtGui.QApplication.translate('launcher_dialog', 'KeepInChecker Launcher', None,
                                                                     QtGui.QApplication.UnicodeUTF8))
-        self.launcher_description_label.setText(QtGui.QApplication.translate('launcher_dialog',
-                                                                             'KeepInChecker requires authentication to run.',
-                                                                             None, QtGui.QApplication.UnicodeUTF8))
+        self.launcher_description_label.setText(QtGui.QApplication.
+                                                translate('launcher_dialog',
+                                                          'KeepInChecker Requires Authentication to Run.', None,
+                                                          QtGui.QApplication.UnicodeUTF8))
         self.password_label.setText(QtGui.QApplication.translate('launcher_dialog', 'Password:', None,
                                                                  QtGui.QApplication.UnicodeUTF8))
         self.ok_button.setText(QtGui.QApplication.translate('launcher_dialog', 'Ok', None,
                                                             QtGui.QApplication.UnicodeUTF8))
         self.cancel_button.setText(QtGui.QApplication.translate('launcher_dialog', 'Cancel', None,
                                                                 QtGui.QApplication.UnicodeUTF8))
+        self.incorrect_password_label.setText(QtGui.QApplication.translate('launcher_dialog', 'Incorrect password.',
+                                                                           None, QtGui.QApplication.UnicodeUTF8))
 
     def launch_application(self):
         password = self.password_textbox.text()
@@ -88,7 +134,8 @@ class LauncherDialog(QtGui.QWidget):
 
         if 'darwin' in operating_system.lower():
             if not self._is_password_correct(password):
-                sys.exit()
+                self.incorrect_password_label.show()
+                return
 
             # because of how the path is generated with .app files, we need to remove the directories
             # from the launcher's path to correctly form the path where the app resides
@@ -97,7 +144,7 @@ class LauncherDialog(QtGui.QWidget):
             path_to_app = self._format_path(os.path.realpath(os.path.dirname(sys.argv[0])), 3)
 
             cmd = 'echo "' + password + '" | sudo -S ' + path_to_app + '/KeepInChecker.app/Contents' \
-                '/MacOS/KeepInChecker.app &'
+                                                                       '/MacOS/KeepInChecker.app &'
             os.system(cmd)
 
             remove_command_process = multiprocessing.Process(target=self._remove_command_from_shell_history)
@@ -108,15 +155,15 @@ class LauncherDialog(QtGui.QWidget):
     def cancel(self):
         sys.exit()
 
+    def hide_incorrect_password_label(self):
+        self.incorrect_password_label.hide()
+
     def _is_password_correct(self, password):
-        os.system('echo ' + password + ' | sudo -S -k mkdir /opt/KeepInCheckerTestTestTest')
+        output_code = os.system('echo ' + password + ' | sudo -S -k ls')
+        if output_code != 0:
+            return False
 
-        dirs = subprocess.check_output('ls /opt', stderr=subprocess.PIPE, shell=True)
-        if 'KeepInCheckerTestTestTest' in dirs:
-            os.system('echo ' + password + ' | sudo -S -k rmdir /opt/KeepInCheckerTestTestTest')
-            return True
-
-        return False
+        return True
 
     def _format_path(self, path, number_of_dirs_to_remove_from_path):
         formatted_path = path.split('/')
@@ -139,9 +186,9 @@ class LauncherDialog(QtGui.QWidget):
 
         hist_file = open(hist_file_path, 'w')
         for i in xrange(0, len(lines)):
-            if i != len(lines) - 1:
-                hist_file.write(lines[i])
-            elif 'keepinchecker' not in lines[i].lower():
+            if i != len(lines) - 1 or \
+                    'echo' and 'sudo' not in lines[i].lower() or \
+                    'keepinchecker' not in lines[i].lower():
                 hist_file.write(lines[i])
 
         hist_file.truncate()
