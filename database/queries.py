@@ -15,7 +15,7 @@ def save_user_data(user_name, user_email, user_email_password,
     encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
 
     db = DbSession()
-    sql = 'INSERT INTO Users (UserName, UserEmail, UserEmailPassword, PartnerEmails, EmailFrequency) ' \
+    sql = 'INSERT INTO User (UserName, UserEmail, UserEmailPassword, PartnerEmails, EmailFrequency) ' \
           'VALUES(\'' + user_name + '\'' + ',\'' + user_email + '\'' + ',\'' + encrypted_password + '\'' + \
           ',\'' + partner_emails + '\'' + ',\'' + email_frequency + '\')'
 
@@ -29,7 +29,7 @@ def save_user_data(user_name, user_email, user_email_password,
 def update_user_data(existing_user, user_name, user_email, user_email_password,
                      partner_emails, email_frequency):
     db = DbSession()
-    sql = 'UPDATE Users SET'
+    sql = 'UPDATE User SET'
     update_values = ''
     needs_update = False
 
@@ -75,7 +75,7 @@ def insert_packets(obj_packets_data):
         host_value = obj_packet.get('Host')
         referer_value = obj_packet.get('Referer')
 
-        sql = 'INSERT INTO Packets (DateReceived, Timezone, Get, Host, Referer)' \
+        sql = 'INSERT INTO Packet (DateReceived, Timezone, Get, Host, Referer)' \
               ' VALUES(\'' + str(date_received_value) + '\'' + ',' + \
               '\'' + timezone_value + '\',' + '\'' + get_value + '\',' + \
               '\'' + host_value + '\',' + '\'' + referer_value + '\')'
@@ -88,7 +88,7 @@ def insert_packets(obj_packets_data):
 
 def get_packets():
     db = DbSession()
-    packets = db.cursor.execute('SELECT * FROM Packets')
+    packets = db.cursor.execute('SELECT * FROM Packet')
 
     db.close()
 
@@ -97,7 +97,7 @@ def get_packets():
 
 def get_current_user():
     db = DbSession()
-    db.cursor.execute('SELECT * FROM Users')
+    db.cursor.execute('SELECT * FROM User')
     current_user = db.cursor.fetchone()
 
     db.close()

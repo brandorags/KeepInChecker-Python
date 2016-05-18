@@ -24,7 +24,7 @@ class DbSession(object):
         self.connection.close()
 
     def create_tables_if_none_exist(self):
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS "Packets" (
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS "Packet" (
                                     `PacketId` INTEGER NOT NULL,
                                     `DateReceived` TEXT NOT NULL,
                                     `Timezone` TEXT,
@@ -34,7 +34,7 @@ class DbSession(object):
                                     PRIMARY KEY(PacketId)
                                 )''')
 
-        self.cursor.execute('''CREATE TABLE IF NOT EXISTS "Users" (
+        self.cursor.execute('''CREATE TABLE IF NOT EXISTS "User" (
                                     `UserId` INTEGER NOT NULL,
                                     `UserName` TEXT NOT NULL,
                                     `UserEmail` TEXT NOT NULL,
