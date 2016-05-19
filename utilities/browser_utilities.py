@@ -99,34 +99,31 @@ def scan_user_internet_traffic(thread_queue):
     packet_sniffer.loop(number_of_packets_to_capture, store_packets)
 
     for packet_arrival_time, packet in sniffed_data.iteritems():
-        arrival_time = datetime.fromtimestamp(packet_arrival_time[0])
-        obj_packets_data.append(save_packet(arrival_time, str(packet)))
+        if is_packet_from_whitelisted_website(packet):
+            continue
 
-        # if is_packet_from_whitelisted_website(packet):
-        #     continue
-        #
-        # arrival_time = datetime.fromtimestamp(packet_arrival_time[0])
-        # obj_word_found = False
-        #
-        # for keyword in constants.packet_keywords:
-        #     if keyword in str(packet):
-        #         for obj_word in constants.objectionable_words_list:
-        #             if obj_word.lower() in str(packet).lower():
-        #                 if obj_word in obj_word_found_datetime and \
-        #                         is_previous_packet_too_close_in_time_to_current_packet(obj_word,
-        #                                                                                arrival_time,
-        #                                                                                obj_word_found_datetime):
-        #                     break
-        #
-        #                 obj_word_found = True
-        #                 obj_word_found_datetime[obj_word] = arrival_time
-        #                 output.append('The word ' + obj_word + ' was found at ' + str(arrival_time))
-        #
-        #                 obj_packets_data.append(save_packet(arrival_time, str(packet)))
-        #                 break
-        #
-        #     if obj_word_found:
-        #         break
+        arrival_time = datetime.fromtimestamp(packet_arrival_time[0])
+        obj_word_found = False
+
+        for keyword in constants.packet_keywords:
+            if keyword in str(packet):
+                for obj_word in constants.objectionable_words_list:
+                    if obj_word.lower() in str(packet).lower():
+                        if obj_word in obj_word_found_datetime and \
+                                is_previous_packet_too_close_in_time_to_current_packet(obj_word,
+                                                                                       arrival_time,
+                                                                                       obj_word_found_datetime):
+                            break
+
+                        obj_word_found = True
+                        obj_word_found_datetime[obj_word] = arrival_time
+                        output.append('The word ' + obj_word + ' was found at ' + str(arrival_time))
+
+                        obj_packets_data.append(save_packet(arrival_time, str(packet)))
+                        break
+
+            if obj_word_found:
+                break
 
     if obj_packets_data:
         insert_packets_into_database(obj_packets_data)
