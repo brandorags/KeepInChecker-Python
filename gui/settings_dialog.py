@@ -13,9 +13,9 @@ import sys
 import os.path
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from constants import constants, secret_key
-from utilities import security_utilities
+from utilities.security_utilities import decrypt
 from PySide import QtCore, QtGui
+from constants import constants
 from database import queries
 
 
@@ -260,7 +260,7 @@ class SettingsDialog(QtGui.QWidget):
 
         self.name_textbox.setText(user['UserName'])
         self.email_textbox.setText(user['UserEmail'])
-        self.password_textbox.setText(security_utilities.decode(user['UserEmailPassword'], secret_key.key))
+        self.password_textbox.setText(decrypt(user['UserEmailPassword']))
 
         partner_emails = user['PartnerEmails'].split(', ')
         row_index = 0

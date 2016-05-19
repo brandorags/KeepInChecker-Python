@@ -1,6 +1,6 @@
+from utilities.security_utilities import encrypt, decrypt
 from database.db_session import DbSession
-from constants import constants, secret_key
-from utilities import security_utilities
+from constants import constants
 from time import tzname
 
 
@@ -12,7 +12,7 @@ def save_user_data(user_name, user_email, user_email_password,
                          user_email_password, partner_emails, email_frequency)
         return
 
-    encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
+    encrypted_password = encrypt(user_email_password)
 
     db = DbSession()
     sql = 'INSERT INTO User (UserName, UserEmail, UserEmailPassword, PartnerEmails, EmailFrequency) ' \
@@ -41,8 +41,8 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
         update_values += ' UserEmail = \'' + user_email + '\','
         needs_update = True
 
-    if security_utilities.decode(existing_user['UserEmailPassword'], secret_key.key) != user_email_password:
-        encrypted_password = security_utilities.encode(user_email_password, secret_key.key)
+    if decrypt(existing_user['UserEmailPassword']) != user_email_password:
+        encrypted_password = encrypt(user_email_password)
         update_values += ' UserEmailPassword = \'' + encrypted_password + '\','
         needs_update = True
 
@@ -71,9 +71,9 @@ def insert_packets(obj_packets_data):
     for obj_packet in obj_packets_data:
         date_received_value = obj_packet.get('Time')
         timezone_value = tzname[0]
-        get_value = obj_packet.get('GET')
-        host_value = obj_packet.get('Host')
-        referer_value = obj_packet.get('Referer')
+        get_value = encrypt(obj_packet.get('GET'))
+        host_value = encrypt(obj_packet.get('Host'))
+        referer_value = encrypt(obj_packet.get('Referer'))
 
         sql = 'INSERT INTO Packet (DateReceived, Timezone, Get, Host, Referer)' \
               ' VALUES(\'' + str(date_received_value) + '\'' + ',' + \
@@ -88,7 +88,7 @@ def insert_packets(obj_packets_data):
 
 def get_packets():
     db = DbSession()
-    packets = db.cursor.execute('SELECT * FROM Packet')
+    packets = db.cursor.execute('SELECT * FROM Packet').fetchall()
 
     db.close()
 

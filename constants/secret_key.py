@@ -1,1 +1,4 @@
-key = 'j&kl414Bj*k)74&#$(]:.<be5T!jnbNgY48*7$%'
+# these two variables are used with PyCrypto for
+# encryption and decryption of database data
+key = b'yT#s;p]$bBw%nIj&kBoP014C'
+iv = b'uEtH7%3)-+]<UbW3'
