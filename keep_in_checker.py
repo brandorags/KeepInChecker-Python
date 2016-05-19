@@ -1,8 +1,9 @@
 import random
 import threading
 
-from utilities import browser_utilities, email_utilities, security_utilities
-from constants import constants, secret_key
+from utilities import browser_utilities, email_utilities
+from utilities.security_utilities import decrypt
+from constants import constants
 from multiprocessing import Queue
 from datetime import datetime
 from database import queries
@@ -33,7 +34,7 @@ def send_scheduled_email():
 
     if not email_utilities.has_email_been_sent:
         email_utilities.send_email(constants.current_user['UserName'], constants.current_user['UserEmail'],
-                                   security_utilities.decode(constants.current_user['UserEmailPassword'], secret_key.key),
+                                   decrypt(constants.current_user['UserEmailPassword']),
                                    constants.current_user['PartnerEmails'])
 
         email_utilities.has_email_been_sent = True
