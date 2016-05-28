@@ -35,4 +35,8 @@ coll = COLLECT(exe,
 app = BUNDLE(coll,
              name='KeepInChecker.app',
              icon='gui/images/chevron-up.icns',
-             bundle_identifier=None)
+             bundle_identifier=None,
+             info_plist={
+                'LSUIElement': 'True'
+                }
+             )
