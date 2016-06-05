@@ -12,7 +12,7 @@ import platform
 import sys
 import os
 
-from PySide import QtCore, QtGui
+from PyQt4 import QtCore, QtGui
 
 
 class LauncherDialog(QtGui.QWidget):
