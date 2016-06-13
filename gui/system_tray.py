@@ -11,9 +11,6 @@ from database.db_session import DbSession
 from PySide.QtGui import *
 
 
-keep_in_checker_backend = multiprocessing.Process(target=keep_in_checker.main)
-
-
 class SystemTray(object):
 
     def __init__(self):
@@ -54,6 +51,7 @@ if __name__ == '__main__':
     db = DbSession()
     db.create_tables_if_none_exist()
 
+    keep_in_checker_backend = multiprocessing.Process(target=keep_in_checker.main)
     keep_in_checker_backend.start()
 
     system_tray_gui = SystemTray()

@@ -10,7 +10,7 @@ various_characters = '1234567890!@#$%^&*()_+abcdefghijklmnopqrstuvwxyzABCDEFGHIJ
 
 class SecurityUtilitiesTest(unittest.TestCase):
 
-    def test_encyrpt(self):
+    def test_encrypt(self):
         encrypted_url = encrypt(url)
         self.assertNotEqual(encrypted_url, url, 'Strings should not be the same')
 

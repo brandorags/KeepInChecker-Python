@@ -3,8 +3,8 @@ import threading
 
 from utilities import browser_utilities, email_utilities
 from utilities.security_utilities import decrypt
-from constants import constants
 from multiprocessing import Queue
+from constants import constants
 from datetime import datetime
 from database import queries
 from time import sleep

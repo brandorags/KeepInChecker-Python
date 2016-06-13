@@ -1,4 +1,3 @@
-import platform
 import sqlite3
 import os
 
@@ -60,18 +59,9 @@ class DbSession(object):
 
     @staticmethod
     def _get_database_path(self):
-        operating_system = platform.system()
-        if 'darwin' or 'linux' in operating_system.lower():
-            if not os.path.exists('/usr/local/.KeepInChecker/KeepInChecker.sqlite'):
-                os.system('mkdir /usr/local/.KeepInChecker')
+        if not os.path.exists('/usr/local/.KeepInChecker/KeepInChecker.sqlite'):
+            os.system('mkdir /usr/local/.KeepInChecker')
 
-            constants.database_path = '/usr/local/.KeepInChecker/KeepInChecker.sqlite'
+        constants.database_path = '/usr/local/.KeepInChecker/KeepInChecker.sqlite'
 
-            return constants.database_path
-        elif 'windows' in operating_system.lower():
-            if not os.path.exists('C:\\KeepInChecker\\KeepInChecker.sqlite'):
-                os.system('mkdir C:\\KeepInChecker')
-
-            constants.database_path = 'C:\\KeepInChecker\\KeepInChecker.sqlite'
-
-            return constants.database_path
+        return constants.database_path

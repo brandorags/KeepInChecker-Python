@@ -7,7 +7,7 @@ from time import sleep
 
 class KeepInCheckerTest(unittest.TestCase):
 
-    def send_scheuled_email_test(self):
+    def test_send_scheduled_email(self):
         email_attempt_passes = 0
         email_sent_counter = 0
 

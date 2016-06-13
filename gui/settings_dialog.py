@@ -192,14 +192,13 @@ class SettingsDialog(QtGui.QWidget):
                 tray.showMessage('Success', 'Your credentials have been saved')
         except:
             self.save_button.setDisabled(False)
-            raise
 
         self.save_button.setDisabled(False)
 
     def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_emails_table):
         valid_fields = True
 
-        # validate user name
+        # validate user's name
         if not user_name_text:
             self.name_textbox.setStyleSheet(self.get_error_background_color(self))
             valid_fields = False
