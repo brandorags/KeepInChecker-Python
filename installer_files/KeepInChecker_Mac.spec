@@ -4,7 +4,7 @@ block_cipher = None
 
 
 
-a = Analysis(['gui/system_tray.py'],
+a = Analysis(['../gui/system_tray.py'],
              pathex=['/Users/Brando/Repositories/Bitbucket/KeepInChecker'],
              binaries=None,
              datas=None,
@@ -34,7 +34,7 @@ coll = COLLECT(exe,
                name='KeepInChecker.app')
 app = BUNDLE(coll,
              name='KeepInChecker.app',
-             icon='gui/images/chevron-up.icns',
+             icon='../gui/images/chevron-up.icns',
              bundle_identifier=None,
              info_plist={
                 'LSUIElement': 'True'
