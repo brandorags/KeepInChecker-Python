@@ -257,14 +257,16 @@ class SettingsDialog(QtGui.QWidget):
         if not user:
             return
 
-        self.name_textbox.setText(user['UserName'])
-        self.email_textbox.setText(user['UserEmail'])
-        self.password_textbox.setText(decrypt(user['UserEmailPassword']))
+        self.name_textbox.setText(decrypt(user['UserName']))
+        self.email_textbox.setText(decrypt(user['UserEmail']))
+        # the UserEmailPassword value needs to be doubly decrypted;
+        # as to why, I'm not sure yet
+        self.password_textbox.setText(decrypt(decrypt(user['UserEmailPassword'])))
 
         partner_emails = user['PartnerEmails'].split(', ')
         row_index = 0
         for partner_email in partner_emails:
-            self.partner_emails_table.setItem(row_index, 0, QtGui.QTableWidgetItem(partner_email))
+            self.partner_emails_table.setItem(row_index, 0, QtGui.QTableWidgetItem(decrypt(partner_email)))
             row_index += 1
 
     def close_window(self):

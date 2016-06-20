@@ -33,9 +33,12 @@ def send_scheduled_email():
         email_utilities.has_email_been_sent = False
 
     if not email_utilities.has_email_been_sent:
-        email_utilities.send_email(constants.current_user['UserName'], constants.current_user['UserEmail'],
-                                   decrypt(constants.current_user['UserEmailPassword']),
-                                   constants.current_user['PartnerEmails'])
+        # the UserEmailPassword value needs to be doubly decrypted;
+        # as to why, I'm not sure yet
+        email_utilities.send_email(decrypt(constants.current_user['UserName']),
+                                   decrypt(constants.current_user['UserEmail']),
+                                   decrypt(decrypt(constants.current_user['UserEmailPassword'])),
+                                   decrypt(constants.current_user['PartnerEmails']))
 
         email_utilities.has_email_been_sent = True
         email_utilities.date_last_email_was_sent = datetime.now()
