@@ -12,12 +12,11 @@ def save_user_data(user_name, user_email, user_email_password,
                          user_email_password, partner_emails, email_frequency)
         return
 
-    encrypted_password = encrypt(user_email_password)
-
     db = DbSession()
     sql = 'INSERT INTO User (UserName, UserEmail, UserEmailPassword, PartnerEmails, EmailFrequency) ' \
-          'VALUES(\'' + user_name + '\'' + ',\'' + user_email + '\'' + ',\'' + encrypted_password + '\'' + \
-          ',\'' + partner_emails + '\'' + ',\'' + email_frequency + '\')'
+          'VALUES(\'' + encrypt(user_name) + '\'' + ',\'' + encrypt(user_email) + '\'' + ',\'' + \
+          encrypt(user_email_password) + '\'' + ',\'' + encrypt(partner_emails) + '\'' + ',\'' + \
+          encrypt(email_frequency) + '\')'
 
     db.cursor.execute(sql)
     db.commit()
@@ -34,20 +33,20 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
     needs_update = False
 
     if existing_user['UserName'] != user_name:
-        update_values += ' UserName = \'' + user_name + '\','
+        update_values += ' UserName = \'' + encrypt(user_name) + '\','
         needs_update = True
 
     if existing_user['UserEmail'] != user_email:
-        update_values += ' UserEmail = \'' + user_email + '\','
+        update_values += ' UserEmail = \'' + encrypt(user_email) + '\','
         needs_update = True
 
     if decrypt(existing_user['UserEmailPassword']) != user_email_password:
         encrypted_password = encrypt(user_email_password)
-        update_values += ' UserEmailPassword = \'' + encrypted_password + '\','
+        update_values += ' UserEmailPassword = \'' + encrypt(encrypted_password) + '\','
         needs_update = True
 
     if existing_user['PartnerEmails'] != partner_emails:
-        update_values += ' PartnerEmails = \'' + partner_emails + '\','
+        update_values += ' PartnerEmails = \'' + encrypt(partner_emails) + '\','
         needs_update = True
 
     if existing_user['EmailFrequency'] != email_frequency:
@@ -69,7 +68,7 @@ def insert_packets(obj_packets_data):
     db = DbSession()
 
     for obj_packet in obj_packets_data:
-        date_received_value = obj_packet.get('Time')
+        date_received_value = encrypt(obj_packet.get('Time'))
         timezone_value = tzname[0]
         get_value = encrypt(obj_packet.get('GET'))
         host_value = encrypt(obj_packet.get('Host'))

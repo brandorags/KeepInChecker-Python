@@ -37,8 +37,8 @@ def generate_body_text(sender_name):
     if packets:
         packet_data = ''
         for packet in packets:
-            packet_data += '\n' + packet['DateReceived'] + ' ' + packet['Timezone'] + ' ' + decrypt(packet['Get']) + \
-                           ' ' + decrypt(packet['Host']) + ' ' + decrypt(packet['Referer'])
+            packet_data += '\n' + decrypt(packet['DateReceived']) + ' ' + packet['Timezone'] + ' ' + \
+                           decrypt(packet['Get']) + ' ' + decrypt(packet['Host']) + ' ' + decrypt(packet['Referer'])
 
         email_body += str(len(packets)) + ' questionable sites were visited:\n'
         email_body += packet_data
