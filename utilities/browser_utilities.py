@@ -3,8 +3,8 @@ import subprocess
 import socket
 import pcapy
 
-from utilities import command_line_utilities, packet_utilities
 from datetime import datetime, timedelta
+from utilities import packet_utilities
 from impacket.ImpactDecoder import *
 from constants import constants
 from database import queries
@@ -14,11 +14,11 @@ sniffed_data = {}
 
 
 def is_browser_open():
-    browsers = ['Firefox', 'Chrome', 'Safari', 'Opera']
+    browsers = ['Firefox', 'Chrome', 'Safari', 'Opera',
+                'Maxthon', 'OmniWeb', 'Torch', 'Brave']
     for browser in browsers:
-        process = subprocess.Popen('ps -ax | grep ' + browser, stdout=subprocess.PIPE, shell=True)
-        process_output = command_line_utilities.convert_output_to_string(process)
-        for output in process_output:
+        process = subprocess.check_output('ps -ax | grep ' + browser, shell=True).split('\n')
+        for output in process:
             if 'app/Contents/MacOS'.lower() in output.lower():
                 return True
 
