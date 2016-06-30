@@ -6,6 +6,17 @@ from time import tzname
 
 def save_user_data(user_name, user_email, user_email_password,
                    partner_emails, email_frequency):
+    """
+    Inserts a new user's personal data, such as the username,
+     email address, email password, etc., into the database.
+
+    :param user_name: the name of the user (e.g., "John Doe")
+    :param user_email: the user's email address
+    :param user_email_password: the password of the user's email address
+    :param partner_emails: the email addresses of the user's accountability partners
+    :param email_frequency: the frequency in which to send the emails (e.g., "Daily")
+    :return:
+    """
     current_user = get_current_user()
     if current_user:
         update_user_data(current_user, user_name, user_email,
@@ -27,6 +38,18 @@ def save_user_data(user_name, user_email, user_email_password,
 
 def update_user_data(existing_user, user_name, user_email, user_email_password,
                      partner_emails, email_frequency):
+    """
+    Updates an existing user's personal data,such as the username,
+     email address, email password, etc., into the database.
+
+    :param existing_user: the object which contains all of the user's existing data
+    :param user_name: the name of the user (e.g., "John Doe")
+    :param user_email: the user's email address
+    :param user_email_password: the password of the user's email address
+    :param partner_emails: the email addresses of the user's accountability partners
+    :param email_frequency: the frequency in which to send the emails (e.g., "Daily")
+    :return:
+    """
     db = DbSession()
     sql = 'UPDATE User SET'
     update_values = ''
@@ -65,6 +88,13 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
 
 
 def insert_packets(obj_packets_data):
+    """
+    Inserts the objectionable packets found via the packet sniffer.
+
+    :param obj_packets_data: a list that contains all the
+     packet objects which contain objectionable content
+    :return:
+    """
     db = DbSession()
 
     for obj_packet in obj_packets_data:
@@ -86,6 +116,11 @@ def insert_packets(obj_packets_data):
 
 
 def get_packets():
+    """
+    Gets all of the packets that are stored in the database.
+
+    :return: a list of packet objects
+    """
     db = DbSession()
     packets = db.cursor.execute('SELECT * FROM Packet').fetchall()
 
@@ -95,6 +130,12 @@ def get_packets():
 
 
 def get_current_user():
+    """
+    Gets the personal data of the current user, such as the username,
+     email address, email password, etc., from the database.
+
+    :return: an object which contains the user's personal data
+    """
     db = DbSession()
     db.cursor.execute('SELECT * FROM User')
     current_user = db.cursor.fetchone()

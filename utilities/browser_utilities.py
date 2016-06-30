@@ -10,10 +10,19 @@ from constants import constants
 from database import queries
 
 
+# a map that contains a packet and the
+# packets recorded arrival time in
+# which it was sniffed
 sniffed_data = {}
 
 
 def is_browser_open():
+    """
+    Checks the OS's current processes to determine
+    if a browser is currently being run.
+
+    :return:
+    """
     browsers = ['Firefox', 'Chrome', 'Safari', 'Opera',
                 'Maxthon', 'OmniWeb', 'Torch', 'Brave']
     for browser in browsers:
@@ -26,6 +35,14 @@ def is_browser_open():
 
 
 def get_current_network_interface():
+    """
+    Gets the current interface in which
+    the network connection is passing through
+    (e.g., it determines if network traffic
+    is going through ethernet or wifi).
+
+    :return:
+    """
     current_network_interface = None
     comp_ip = socket.gethostbyname(socket.gethostname())
     interfaces = ni.interfaces()
@@ -42,12 +59,45 @@ def get_current_network_interface():
     return current_network_interface
 
 
-def save_packet(packet_arrival_time, packet):
+def format_packet(unformatted_packet, keyword):
+    """
+    Formats a packet by removing any unnecessary
+    data that's not associated with the keyword.
+    It will first remove all hex values from the
+    packet, and then strips data that doesn't
+    pertain to the passed in keyword parameter.
+
+    :param unformatted_packet: the untouched packet
+    :param keyword: a string that determines what
+    data to keep when the packet is formatted
+    (e.g., GET, HOST, REFERER)
+    :return: a string that can be used to more
+    easily parse useful and relevant packet data
+    """
+    no_hex_packet = packet_utilities.remove_hex_values_from_packet(unformatted_packet)
+    formatted_packet = packet_utilities.parse_packet_data_by_keyword(no_hex_packet, keyword)
+
+    return formatted_packet
+
+
+def create_packet_map(packet_arrival_time, packet):
+    """
+    Creates a map that contains the packet's
+    recorded arrival time in which the packet
+    was sniffed, and also the packet itself.
+
+
+    :param packet_arrival_time: an object that
+    contains the date of the packets recorded
+    arrival time
+    :param packet: the packet itself
+    :return: a map that contains formatted
+    versions of the packet and the date of the packet
+    """
     packet_map = {}
-    packet_text_only = packet_utilities.remove_hex_values_from_packet(packet)
 
     for keyword in constants.packet_keywords:
-        packet_map[keyword] = packet_utilities.parse_packet_data_by_keyword(packet_text_only, keyword)
+        packet_map[keyword] = format_packet(packet, keyword)
 
     packet_map['Time'] = datetime.strftime(packet_arrival_time, '%d-%m-%Y %H:%M:%S')
 
@@ -55,10 +105,26 @@ def save_packet(packet_arrival_time, packet):
 
 
 def insert_packets_into_database(obj_packets_data):
+    """
+    Calls the query that inserts each packet into
+    the database.
+
+    :param obj_packets_data: a list that contains
+    maps of packet data
+    :return:
+    """
     queries.insert_packets(obj_packets_data)
 
 
 def is_packet_from_whitelisted_website(packet):
+    """
+    Checks to see if a packet originated from
+    a whitelisted website.
+
+    :param packet:
+    :return: True if the packet came from a
+    whitelisted website; False if not
+    """
     for site in constants.whitelisted_websites:
         if site in str(packet):
             return True
@@ -69,6 +135,15 @@ def is_packet_from_whitelisted_website(packet):
 def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
                                                            current_obj_word_packet_arrival_time,
                                                            obj_word_found_datetime):
+    """
+    Checks to see if a packet contains an objective
+    word that was already found five seconds or less ago.
+
+    :param obj_word: the objective word
+    :param current_obj_word_packet_arrival_time:
+    :param obj_word_found_datetime:
+    :return:
+    """
     previous_obj_word_packet_arrival_time = obj_word_found_datetime[obj_word]
     time_difference = current_obj_word_packet_arrival_time - previous_obj_word_packet_arrival_time
 
@@ -79,12 +154,34 @@ def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
 
 
 def store_packets(pkt_header, data):
+    """
+    Called when the packet sniffer is active,
+    this method takes the data gathered over
+    the network and stores it in a map.
+
+    :param pkt_header: the header of the packet;
+    this will contain the arrival time of the
+    packet itself
+    :param data: the packet before it has been
+    decoded
+    :return: a map with the key as the timestamp
+    of the packet and the value as the packet
+    itself
+    """
     packet = EthDecoder().decode(data)
     packet_arrival_time = pkt_header.getts()
     sniffed_data[packet_arrival_time] = packet
 
 
 def scan_user_internet_traffic(thread_queue):
+    """
+    Scans the network traffic of the user
+    and saves any objectionable content
+    into the database.
+
+    :param thread_queue:
+    :return:
+    """
     obj_packets_data = []
     obj_word_found_datetime = {}
     output = []
@@ -119,7 +216,7 @@ def scan_user_internet_traffic(thread_queue):
                         obj_word_found_datetime[obj_word] = arrival_time
                         output.append('The word ' + obj_word + ' was found at ' + str(arrival_time))
 
-                        obj_packets_data.append(save_packet(arrival_time, str(packet)))
+                        obj_packets_data.append(create_packet_map(arrival_time, str(packet)))
                         break
 
             if obj_word_found:
