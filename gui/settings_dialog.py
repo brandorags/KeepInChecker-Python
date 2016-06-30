@@ -20,14 +20,31 @@ from database import queries
 
 
 class SettingsDialog(QtGui.QWidget):
+    """
+    This class creates the dialog box that allows
+    the user to input his or her personal info,
+    such as their username, email, etc.
+    """
 
     def __init__(self):
+        """
+        Initializes the class.
+
+        :var self.email_regex - a regex used to determine if a
+        string is in an email format or not
+        """
         QtGui.QWidget.__init__(self)
         self.setup_ui(self)
 
         self.email_regex = re.compile('^[\w\.\+\-]+@[\w]+\.[a-z]{2,6}$')
 
     def setup_ui(self, settings_dialog):
+        """
+        Creates the dialog box.
+
+        :param settings_dialog:
+        :return:
+        """
         settings_dialog.setObjectName('settings_dialog')
         settings_dialog.resize(408, 279)
         self.horizontalLayoutWidget = QtGui.QWidget(settings_dialog)
@@ -145,6 +162,12 @@ class SettingsDialog(QtGui.QWidget):
         self.move(QtGui.QApplication.desktop().screen().rect().center() - self.rect().center())
 
     def retranslate_ui(self, settings_dialog):
+        """
+        Additional dialog box setup.
+
+        :param settings_dialog:
+        :return:
+        """
         settings_dialog.setWindowTitle(QtGui.QApplication.translate('settings_dialog', 'Settings', None,
                                                                     QtGui.QApplication.UnicodeUTF8))
         self.name_label.setText(QtGui.QApplication.translate('settings_dialog', 'Name:', None,
@@ -170,6 +193,14 @@ class SettingsDialog(QtGui.QWidget):
                                                                                    QtGui.QApplication.UnicodeUTF8))
 
     def save_user_settings(self):
+        """
+        The action performed after the user presses the
+        "Save" button. All the credentials the user has
+        input into the dialog box will be saved to the
+        database upon depressing this button.
+
+        :return:
+        """
         self.save_button.setDisabled(True)
 
         try:
@@ -197,6 +228,19 @@ class SettingsDialog(QtGui.QWidget):
         self.save_button.setDisabled(False)
 
     def are_fields_valid(self, user_name_text, user_email_text, password_text, partner_emails_table):
+        """
+        Checks to see if the fields the user has entered are valid
+        (e.g., is the field empty? Is the email address in an
+        actual email format?).
+
+        :param user_name_text: - the text from the "Name" textbox
+        :param user_email_text: - the text from the "Email" textbox
+        :param password_text: - the text from the "Password" textbox
+        :param partner_emails_table: - the table object which contains
+        the user's accountability partners' email addresses
+        :return: True if all of the fields meet the valid criteria;
+        False if one to n number of the fields do not
+        """
         valid_fields = True
 
         # validate user name
@@ -245,11 +289,24 @@ class SettingsDialog(QtGui.QWidget):
         return valid_fields
 
     def scroll_partner_emails_table_to_top(self):
+        """
+        Scrolls the partner emails table to the top
+        where the first row becomes visible again.
+
+        :return:
+        """
         self.partner_emails_table.setItem(0, 0, QtGui.QTableWidgetItem(''))
         first_item = self.partner_emails_table.item(0, 0)
         self.partner_emails_table.scrollToItem(first_item, QtGui.QAbstractItemView.PositionAtTop)
 
     def set_user_settings_on_open(self):
+        """
+        Sets the user's credentials within the
+        dialog box's fields upon the opening
+        of the dialog itself.
+
+        :return:
+        """
         if constants.current_user:
             user = constants.current_user
         else:
@@ -271,6 +328,13 @@ class SettingsDialog(QtGui.QWidget):
             row_index += 1
 
     def close_window(self):
+        """
+        Closes the dialog box and sets the textbox fields
+        to a clean slate to correctly populate the right
+        data upon the reopening of the dialog box.
+
+        :return:
+        """
         self.name_textbox.setText('')
         self.name_textbox.setStyleSheet(self.get_successful_background_color(self))
         self.email_textbox.setText('')
@@ -285,14 +349,39 @@ class SettingsDialog(QtGui.QWidget):
 
     @staticmethod
     def get_error_background_color(self):
+        """
+        Gets the background color used to display
+        a text field that was deemed invalid.
+
+        :param self:
+        :return: the background color for the textbox
+        """
         return 'background-color: rgb(255, 186, 186)'
 
     @staticmethod
     def get_successful_background_color(self):
+        """
+        Gets the background color used to display
+        a text field that was deemed valid.
+
+        :param self:
+        :return: the background color for the textbox
+        """
         return 'background-color: rgb(255, 255, 255)'
 
     @staticmethod
     def partner_emails_to_comma_separated_list(self, partner_emails):
+        """
+        Gathers all of the user's accountability partners'
+        email addresses and joins them in a csv format.
+
+        Example: a@example.com,b@example.com,c@example.comd
+
+        :param self:
+        :param partner_emails: table object that contains
+        the emails
+        :return: a string of emails joined by commas
+        """
         partner_emails_as_comma_sep_list = ''
 
         column_index = 0

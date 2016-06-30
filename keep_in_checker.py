@@ -11,12 +11,28 @@ from time import sleep
 
 
 def initialize_current_user():
+    """
+    Gets the data about the current
+    user and sets it to a constant
+    object that can be used to
+    verify and retrieve the user's
+    credentials without having to
+    make calls to the database.
+
+    :return:
+    """
     user = queries.get_current_user()
     if user:
         constants.current_user = user
 
 
-def record_internet_traffic():
+def record_network_traffic():
+    """
+    Creates the process to begin scanning
+    network traffic.
+
+    :return:
+    """
     internet_traffic_queue = Queue()
     thread = threading.Thread(target=browser_utilities.scan_user_internet_traffic,
                               args=(internet_traffic_queue,))
@@ -26,6 +42,15 @@ def record_internet_traffic():
 
 
 def send_scheduled_email():
+    """
+    Sends an activity report email to the
+    user's accountability partners. It will
+    send an email based at a frequency
+    determined by the user (e.g. daily or
+    weekly).
+
+    :return:
+    """
     email_frequency = 1 if constants.current_user['EmailFrequency'] == 'Daily' else 7
     time_of_last_email_sent_to_now = datetime.now() - email_utilities.date_last_email_was_sent
 
@@ -45,6 +70,14 @@ def send_scheduled_email():
 
 
 def main():
+    """
+    The main method. This contains a
+    constant loop that scans internet
+    traffic and send emails to the
+    user's accountability partners.
+
+    :return:
+    """
     initialize_current_user()
 
     while True:
@@ -54,9 +87,9 @@ def main():
         if not browser_utilities.is_browser_open() or not constants.current_user:
             return
 
-        internet_traffic = record_internet_traffic()
-        if internet_traffic:
-            for item in internet_traffic:
+        network_traffic = record_network_traffic()
+        if network_traffic:
+            for item in network_traffic:
                 print(item)
 
         try:
