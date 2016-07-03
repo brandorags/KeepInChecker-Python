@@ -7,4 +7,4 @@ constants/secret_key_production.txt
 *.pyc
 *.sqlite
 *.sqlite-journal
-
+*.orig
