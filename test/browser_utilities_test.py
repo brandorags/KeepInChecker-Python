@@ -20,5 +20,6 @@ class BrowserUtilitiesTest(unittest.TestCase):
         not_redundant_packet_list = browser_utilities.remove_redundant_packets(packets)
         self.assertEqual(len(not_redundant_packet_list), 7, 'All redundant packets should have been removed')
 
+
 if __name__ == '__main__':
     unittest.main()
