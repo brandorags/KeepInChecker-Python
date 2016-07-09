@@ -3,7 +3,6 @@ import threading
 
 from utilities import browser_utilities, email_utilities
 from utilities.security_utilities import decrypt
-from multiprocessing import Queue
 from constants import constants
 from datetime import datetime
 from database import queries
@@ -28,17 +27,13 @@ def initialize_current_user():
 
 def record_network_traffic():
     """
-    Creates the process to begin scanning
-    network traffic.
+    Creates the thread which
+    sniffs network traffic.
 
     :return:
     """
-    internet_traffic_queue = Queue()
-    thread = threading.Thread(target=browser_utilities.scan_user_internet_traffic,
-                              args=(internet_traffic_queue,))
-    thread.start()
-
-    return internet_traffic_queue.get()
+    sniffer_thread = threading.Thread(target=browser_utilities.scan_user_internet_traffic)
+    sniffer_thread.start()
 
 
 def send_scheduled_email():
@@ -87,10 +82,7 @@ def main():
         if not browser_utilities.is_browser_open() or not constants.current_user:
             return
 
-        network_traffic = record_network_traffic()
-        if network_traffic:
-            for item in network_traffic:
-                print(item)
+        record_network_traffic()
 
         try:
             send_scheduled_email()

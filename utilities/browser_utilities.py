@@ -3,16 +3,16 @@ import subprocess
 import socket
 import pcapy
 
-from datetime import datetime, timedelta
-from utilities import packet_utilities
+from utilities import command_line_utilities, packet_utilities
 from impacket.ImpactDecoder import *
 from constants import constants
+from datetime import datetime
 from database import queries
 
 
-# a map that contains a packet and the
-# packets recorded arrival time in
-# which it was sniffed
+# a map that contains packets and the
+# packets' recorded arrival times in
+# which they were sniffed
 sniffed_data = {}
 
 
@@ -66,7 +66,7 @@ def format_packet(unformatted_packet, keyword):
     Formats a packet by removing any unnecessary
     data that's not associated with the keyword.
     It will first remove all hex values from the
-    packet, and then strips data that doesn't
+    packet, and then it will strip data that doesn't
     pertain to the passed in keyword parameter.
 
     :param unformatted_packet: the untouched packet
@@ -91,33 +91,63 @@ def create_packet_map(packet_arrival_time, packet):
 
     :param packet_arrival_time: an object that
     contains the date of the packets recorded
-    arrival time
-    :param packet: the packet itself
+    arrival time (the key)
+    :param packet: the packet itself (the value)
     :return: a map that contains formatted
     versions of the packet and the date of the packet
     """
     packet_map = {}
+    get_host_referer_values = []
 
     for keyword in constants.packet_keywords:
-        packet_map[keyword] = format_packet(packet, keyword)
+        get_host_referer_values.append(format_packet(packet, keyword))
 
     # format the time in a more recognizable format
-    packet_arrival_time = datetime.strftime(packet_arrival_time, '%m-%d-%Y %H:%M:%S')
+    packet_arrival_time = datetime.strftime(packet_arrival_time, '%d-%m-%Y %H:%M:%S')
     packet_map[packet_arrival_time] = get_host_referer_values
 
     return packet_map
 
 
-def insert_packets_into_database(obj_packets_data):
+def remove_redundant_packets(packets):
+    """
+    Removes packets that contain similar to
+    the same data of another packet that arrived
+    at the same time. The assumption is that if
+    the packet arrived at the same time, then
+    it must relatively be the same or similar
+    info. If any packets have the same timestamp,
+    then only the first one in the list will stay.
+
+    :param packets: the list of packets
+    :return: a list of packets that contains
+    no redundant data
+    """
+    timestamp_list = []
+    packet_counter = 0
+
+    for packet in packets:
+        for timestamp in packet:
+            if timestamp not in timestamp_list:
+                timestamp_list.append(timestamp)
+            else:
+                del packets[packet_counter]
+
+        packet_counter += 1
+
+    return packets
+
+
+def insert_packets_into_database(objectionable_packets):
     """
     Calls the query that inserts each packet into
     the database.
 
-    :param obj_packets_data: a list that contains
+    :param objectionable_packets: a list that contains
     maps of packet data
     :return:
     """
-    queries.insert_packets(obj_packets_data)
+    queries.insert_packets(remove_redundant_packets(objectionable_packets))
 
 
 def is_packet_from_whitelisted_website(packet):
@@ -156,13 +186,12 @@ def store_packets(pkt_header, data):
     sniffed_data[packet_arrival_time] = packet
 
 
-def scan_user_internet_traffic(thread_queue):
+def scan_user_internet_traffic():
     """
     Scans the network traffic of the user
     and saves any objectionable content
     into the database.
 
-    :param thread_queue:
     :return:
     """
     objectionable_packets = []
@@ -181,7 +210,7 @@ def scan_user_internet_traffic(thread_queue):
             continue
 
         arrival_time = datetime.fromtimestamp(packet_arrival_time[0])
-        obj_word_found = False
+        objectionable_word_found = False
 
         for keyword in constants.packet_keywords:
             if keyword in str(packet):
@@ -191,7 +220,7 @@ def scan_user_internet_traffic(thread_queue):
                         objectionable_packets.append(create_packet_map(arrival_time, str(packet)))
                         break
 
-            if obj_word_found:
+            if objectionable_word_found:
                 break
 
     if objectionable_packets:
