@@ -101,7 +101,7 @@ def create_packet_map(packet_arrival_time, packet):
         get_host_referer_values.append(format_packet(packet, keyword))
 
     # format the time in a more recognizable format
-    packet_arrival_time = datetime.strftime(packet_arrival_time, '%d-%m-%Y %H:%M:%S')
+    packet_arrival_time = datetime.strftime(packet_arrival_time, '%m-%d-%Y %H:%M:%S')
     packet_map[packet_arrival_time] = get_host_referer_values
 
     return packet_map
@@ -164,27 +164,6 @@ def is_packet_from_whitelisted_website(packet):
     return False
 
 
-# def is_previous_packet_too_close_in_time_to_current_packet(obj_word,
-#                                                            current_obj_word_packet_arrival_time,
-#                                                            obj_word_found_datetime):
-#     """
-#     Checks to see if a packet contains an objective
-#     word that was already found five seconds or less ago.
-#
-#     :param obj_word: the objective word
-#     :param current_obj_word_packet_arrival_time:
-#     :param obj_word_found_datetime:
-#     :return:
-#     """
-#     previous_obj_word_packet_arrival_time = obj_word_found_datetime[obj_word]
-#     time_difference = current_obj_word_packet_arrival_time - previous_obj_word_packet_arrival_time
-#
-#     if timedelta.total_seconds(time_difference) < 5:
-#         return True
-#
-#     return False
-
-
 def store_packets(pkt_header, data):
     """
     Called when the packet sniffer is active,
@@ -214,7 +193,6 @@ def scan_user_internet_traffic():
     :return:
     """
     objectionable_packets = []
-    # obj_word_found_datetime = {}
 
     interface = get_current_network_interface()
     max_bytes = 1024
@@ -236,16 +214,7 @@ def scan_user_internet_traffic():
             if keyword in str(packet):
                 for obj_word in constants.objectionable_words_list:
                     if obj_word.lower() in str(packet).lower():
-                        # if obj_word in obj_word_found_datetime and \
-                        #         is_previous_packet_too_close_in_time_to_current_packet(obj_word,
-                        #                                                                arrival_time,
-                        #                                                                obj_word_found_datetime):
-                        #     break
-
                         objectionable_word_found = True
-                        # obj_word_found_datetime[obj_word] = arrival_time
-                        # output.append('The word ' + obj_word + ' was found at ' + str(arrival_time))
-
                         objectionable_packets.append(create_packet_map(arrival_time, str(packet)))
                         break
 
@@ -254,6 +223,3 @@ def scan_user_internet_traffic():
 
     if objectionable_packets:
         insert_packets_into_database(objectionable_packets)
-
-    # thread_queue.put(output)
-    # return output

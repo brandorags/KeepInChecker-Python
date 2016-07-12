@@ -87,29 +87,30 @@ def update_user_data(existing_user, user_name, user_email, user_email_password,
         constants.current_user = get_current_user()
 
 
-def insert_packets(obj_packets_data):
+def insert_packets(objective_packets):
     """
     Inserts the objectionable packets found via the packet sniffer.
 
-    :param obj_packets_data: a list that contains all the
+    :param objective_packets: a list that contains all the
      packet objects which contain objectionable content
     :return:
     """
     db = DbSession()
 
-    for obj_packet in obj_packets_data:
-        date_received_value = encrypt(obj_packet.get('Time'))
-        timezone_value = tzname[0]
-        get_value = encrypt(obj_packet.get('GET'))
-        host_value = encrypt(obj_packet.get('Host'))
-        referer_value = encrypt(obj_packet.get('Referer'))
+    for obj_packet in objective_packets:
+        for timestamp in obj_packet:
+            date_received_value = encrypt(timestamp)
+            timezone_value = tzname[0]
+            get_value = encrypt(obj_packet[timestamp][0])
+            host_value = encrypt(obj_packet[timestamp][1])
+            referer_value = encrypt(obj_packet[timestamp][2])
 
-        sql = 'INSERT INTO Packet (DateReceived, Timezone, Get, Host, Referer)' \
-              ' VALUES(\'' + str(date_received_value) + '\'' + ',' + \
-              '\'' + timezone_value + '\',' + '\'' + get_value + '\',' + \
-              '\'' + host_value + '\',' + '\'' + referer_value + '\')'
+            sql = 'INSERT INTO Packet (DateReceived, Timezone, Get, Host, Referer)' \
+                  ' VALUES(\'' + str(date_received_value) + '\'' + ',' + \
+                  '\'' + timezone_value + '\',' + '\'' + get_value + '\',' + \
+                  '\'' + host_value + '\',' + '\'' + referer_value + '\')'
 
-        db.cursor.execute(sql)
+            db.cursor.execute(sql)
 
     db.commit()
     db.close()
