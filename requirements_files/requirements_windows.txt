@@ -1,6 +1,10 @@
 future==0.15.2
-impacket==0.9.14
+impacket==0.9.15
 netifaces==0.10.4
+pcapy==0.10.10
 pefile==2016.3.28
+pycrypto==2.6.1
 PyInstaller==3.2
 pypiwin32==219
+PySide==1.2.4
+virtualenv==15.0.2
