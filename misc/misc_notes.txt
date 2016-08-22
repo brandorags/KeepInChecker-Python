@@ -1,0 +1,7 @@
+# adding LSUIElement to Info.plist file
+/usr/libexec/PlistBuddy -c 'Add :LSUIElement bool true' /PathToKeepInChecker/KeepInChecker.app/Contents/Info.plist
+
+# Py2App command
+python setup.py py2app --optimize 2
+
+NOTE: it appears that PyInstaller has trouble with making the application run in the background, but Py2App does not
