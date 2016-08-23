@@ -130,25 +130,22 @@ class LauncherDialog(QtGui.QWidget):
 
     def launch_application(self):
         password = self.password_textbox.text()
-        operating_system = platform.system()
 
-        if 'darwin' in operating_system.lower():
-            if not self._is_password_correct(password):
-                self.incorrect_password_label.show()
-                return
+        if not self._is_password_correct(password):
+            self.incorrect_password_label.show()
+            return
 
-            # because of how the path is generated with .app files, we need to remove the directories
-            # from the launcher's path to correctly form the path where the app resides
-            # so, original path = /Users/User/Launcher.app/Contents/MacOS
-            # and new_path = /Users/User
-            path_to_app = self._format_path(os.path.realpath(os.path.dirname(sys.argv[0])), 3)
+        # because of how the path is generated with .app files, we need to remove the directories
+        # from the launcher's path to correctly form the path where the app resides
+        # so, original path = /Users/User/Launcher.app/Contents/MacOS and new_path = /Users/User
+        path_to_app = self._format_path(os.path.realpath(os.path.dirname(sys.argv[0])), 3)
 
-            cmd = 'echo "' + password + '" | sudo -S ' + path_to_app + '/KeepInChecker.app/Contents' \
-                                                                       '/MacOS/KeepInChecker.app &'
-            os.system(cmd)
+        cmd = 'echo "' + password + '" | sudo -S ' + path_to_app + '/KeepInChecker.app/Contents' \
+                                                                   '/MacOS/KeepInChecker &'
+        os.system(cmd)
 
-            remove_command_process = multiprocessing.Process(target=self._remove_command_from_shell_history)
-            remove_command_process.start()
+        remove_command_process = multiprocessing.Process(target=self._remove_command_from_shell_history)
+        remove_command_process.start()
 
         sys.exit()
 
@@ -193,6 +190,7 @@ class LauncherDialog(QtGui.QWidget):
 
         hist_file.truncate()
         hist_file.close()
+
 
 if __name__ == '__main__':
     app = QtGui.QApplication(sys.argv)

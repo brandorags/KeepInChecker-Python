@@ -28,5 +28,5 @@ exe = EXE(pyz,
           console=False )
 app = BUNDLE(exe,
              name='KeepInChecker_Launcher.app',
-             icon='../gui/images/chevron-up.icns',
+             icon='./gui/images/chevron-up.icns',
              bundle_identifier=None)
