@@ -13,7 +13,12 @@ DATA_FILES = []
 PKGS = ['netifaces']
 OPTIONS = {
     'argv_emulation': True,
-    'plist': {'LSUIElement': True},
+    'plist': {'LSUIElement': True,
+              'NSHumanReadableCopyright': 'Copyright 2016 Brandon Ragsdale',
+              'CFBundleIdentifier': 'org.pythonmac.unspecified.KeepInChecker',
+              'CFBundleName': 'KeepInChecker',
+              'CFBundleDisplayName': 'KeepInChecker',
+              'CFBundleShortVersionString': '1.0'},
     'iconfile': 'gui/images/chevron-up.icns'
 }
 
