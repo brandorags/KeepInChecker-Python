@@ -3,7 +3,6 @@ import subprocess
 import socket
 import pcapy
 
-from datetime import datetime, timedelta
 from utilities import packet_utilities
 from impacket.ImpactDecoder import *
 from constants import constants
@@ -14,24 +13,6 @@ from database import queries
 # packets' recorded arrival times in
 # which they were sniffed
 sniffed_data = {}
-
-
-def is_browser_open():
-    """
-    Checks the OS's current processes to determine
-    if a browser is currently being run.
-
-    :return:
-    """
-    browsers = ['Firefox', 'Chrome', 'Safari', 'Opera',
-                'Maxthon', 'OmniWeb', 'Torch', 'Brave']
-    for browser in browsers:
-        process = subprocess.check_output('ps -ax | grep ' + browser, shell=True).split('\n')
-        for output in process:
-            if 'app/Contents/MacOS'.lower() in output.lower():
-                return True
-
-    return False
 
 
 def get_current_network_interface():
@@ -197,11 +178,15 @@ def scan_user_internet_traffic():
     interface = get_current_network_interface()
     max_bytes = 1024
     promiscuous_mode = False
-    read_timeout = 100
+    read_timeout = 30
     packet_sniffer = pcapy.open_live(interface, max_bytes, promiscuous_mode, read_timeout)
 
     number_of_packets_to_capture = 1000
-    packet_sniffer.loop(number_of_packets_to_capture, store_packets)
+
+    try:
+        packet_sniffer.loop(number_of_packets_to_capture, store_packets)
+    except:
+        return
 
     for packet_arrival_time, packet in sniffed_data.iteritems():
         if is_packet_from_whitelisted_website(packet):
@@ -223,3 +208,4 @@ def scan_user_internet_traffic():
 
     if objectionable_packets:
         insert_packets_into_database(objectionable_packets)
+        del objectionable_packets[:]
