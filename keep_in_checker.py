@@ -56,7 +56,7 @@ def main():
     while True:
         sleep(10)
 
-        if not browser_utilities.is_browser_open() or not constants.current_user:
+        if not constants.current_user:
             return
 
         record_network_traffic()
