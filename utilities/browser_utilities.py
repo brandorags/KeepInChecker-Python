@@ -1,11 +1,11 @@
 import netifaces as ni
-import subprocess
 import socket
 import pcapy
 
 from utilities import packet_utilities
 from impacket.ImpactDecoder import *
 from constants import constants
+from datetime import datetime
 from database import queries
 
 
