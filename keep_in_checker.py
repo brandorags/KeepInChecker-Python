@@ -2,6 +2,7 @@ import threading
 import random
 
 from utilities import browser_utilities, email_utilities
+from database.db_session import DbSession
 from constants import constants
 from database import queries
 from time import sleep
@@ -10,6 +11,18 @@ from time import sleep
 # thread object that's used
 # to scan network traffic
 sniffer_thread = threading.Thread()
+
+
+def initialize_database_connection():
+    """
+    Initializes the connection to the
+    database and will create a new
+    database with the User and Packet
+    tables if one does not already exist.
+    """
+    db = DbSession(constants.database_path)
+    db.create_tables_if_none_exist()
+    db.commit_and_close()
 
 
 def initialize_current_user():
@@ -51,6 +64,7 @@ def main():
 
     :return:
     """
+    initialize_database_connection()
     initialize_current_user()
 
     while True:
