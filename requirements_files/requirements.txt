@@ -7,3 +7,4 @@ pcapy==0.10.10
 pyaes==1.6.0
 PyInstaller==3.2
 PySide==1.2.4
+pysqlcipher==2.6.7
