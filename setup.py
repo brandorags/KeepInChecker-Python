@@ -10,7 +10,7 @@ from setuptools import setup
 
 APP = ['gui/system_tray.py']
 DATA_FILES = []
-PKGS = ['netifaces']
+PKGS = ['netifaces', 'pysqlcipher']
 OPTIONS = {
     'argv_emulation': True,
     'plist': {'LSUIElement': True,
