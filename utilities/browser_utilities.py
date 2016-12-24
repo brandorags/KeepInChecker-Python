@@ -177,6 +177,8 @@ def store_packets(pkt_header, data):
     of the packet and the value as the packet
     itself
     """
+    global sniffed_data
+
     packet = EthDecoder().decode(data)
     packet_arrival_time = pkt_header.getts()
     sniffed_data[packet_arrival_time] = packet
@@ -207,6 +209,20 @@ def sniff_packets(number_of_packets_to_capture):
     except:
         return
 
+
+def scan_user_internet_traffic():
+    """
+    Scans the network traffic of the user
+    and saves any objectionable content
+    into the database.
+
+    :return:
+    """
+    objectionable_packets = []
+    number_of_packets_to_capture = 1000
+
+    sniff_packets(number_of_packets_to_capture)
+
     for packet_arrival_time, packet in sniffed_data.iteritems():
         if is_packet_from_whitelisted_website(packet):
             continue
@@ -228,3 +244,6 @@ def sniff_packets(number_of_packets_to_capture):
     if objectionable_packets:
         insert_packets_into_database(objectionable_packets)
         del objectionable_packets[:]
+
+    if sniffed_data:
+        sniffed_data.clear()
